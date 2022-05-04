@@ -19,3 +19,5 @@ class Api {
         }).then(onResponse)
     }
 }
+
+export default new Api(config)
