@@ -1,0 +1,8 @@
+.tagListContainer {
+    display: flex;
+}
+
+.tag {
+    background-color: rgb(238, 241, 28);
+    margin-right: 5px;
+}
