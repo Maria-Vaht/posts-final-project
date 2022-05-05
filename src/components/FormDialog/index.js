@@ -24,7 +24,8 @@ export const FormDialog = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        api.createPost(e.target.title.value, e.target.text.value)
+        const { target } = e
+        api.createPost(target.title.value, target.text.value)
             .then((newPost) => setPostList(prevState => [...prevState, newPost]))
             .catch(err => alert(err))
     };
@@ -36,12 +37,8 @@ export const FormDialog = () => {
             </Button>
             <form onSubmit={handleSubmit}>
                 <Dialog disablePortal={true} open={open} onClose={handleClose}>
-                    <DialogTitle>Subscribe</DialogTitle>
+                    <DialogTitle>Create new post</DialogTitle>
                     <DialogContent>
-                        <DialogContentText>
-                            To subscribe to this website, please enter your email address here. We
-                            will send updates occasionally.
-                        </DialogContentText>
                         <TextField
                             autoFocus
                             margin="dense"
@@ -57,6 +54,20 @@ export const FormDialog = () => {
                             fullWidth
                             variant="standard"
                         />
+                        <TextField
+                            margin="dense"
+                            id="image"
+                            label="Image"
+                            fullWidth
+                            variant="standard"
+                        />
+                        {/* <TextField
+                            margin="dense"
+                            id="tags"
+                            label="Tags"
+                            fullWidth
+                            variant="standard"
+                        /> */}
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>

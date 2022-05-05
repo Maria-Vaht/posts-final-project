@@ -8,9 +8,21 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import DeleteIcon from '@mui/icons-material/Delete'
 
 export const Post = ({ post }) => {
-    console.log(post)
+    const { _id: postId,
+        title,
+        image,
+        text,
+        tags,
+        likes,
+        author: { avatar,
+            name,
+            _id: authorId },
+    } = post
+
     const { setPostList, currentUser, favorites, setFavorites } = useContext(GlobalContext)
-    const [favoriteCounter, setFavoriteCounter] = useState(post.likes.length)
+    const [favoriteCounter, setFavoriteCounter] = useState(likes.length)
+
+
 
     let dayjs = require('dayjs')
     let dateParsed = dayjs(post['created_at']).format('DD-MM-YYYY HH:mm:ss')
@@ -28,10 +40,10 @@ export const Post = ({ post }) => {
     }
 
     const addFavorite = () => {
-        writeLS('favorites', post._id)
-        setFavorites((prevState) => [...prevState, post._id])
+        writeLS('favorites', postId)
+        setFavorites((prevState) => [...prevState, postId])
         setFavoriteCounter((prevState) => prevState + 1)
-        api.addLike(post._id)
+        api.addLike(postId)
             .then(() => {
                 alert('Лайк поставлен');
             })
@@ -41,10 +53,10 @@ export const Post = ({ post }) => {
     }
 
     const removeFavorite = () => {
-        removeLS('favorites', post._id)
-        setFavorites((prevState) => prevState.filter((postId) => postId !== post._id))
+        removeLS('favorites', postId)
+        setFavorites((prevState) => prevState.filter((postId) => postId !== postId))
         setFavoriteCounter((prevState) => prevState - 1)
-        api.deleteLike(post._id)
+        api.deleteLike(postId)
             .then(() => {
                 alert('Лайк убран');
             })
@@ -55,8 +67,8 @@ export const Post = ({ post }) => {
 
     const deletePost = () => {
         if (confirm('Вы действительно хотите удалить пост?')) {
-            api.deletePostById(post._id)
-                .then((deletedPost) => setPostList(prevState => prevState.filter((post) => post._id !== deletedPost._id)))
+            api.deletePostById(postId)
+                .then((deletedPost) => setPostList(prevState => prevState.filter((post) => postId !== deletedPost._id)))
                 .catch(err => alert(err))
         }
     }
@@ -65,14 +77,14 @@ export const Post = ({ post }) => {
         <Card sx={{ maxWidth: 345 }}>
             <CardHeader
                 avatar={
-                    <Avatar src={post.author.avatar}></Avatar>
+                    <Avatar src={avatar}></Avatar>
                 }
-                title={post.author.name}
+                title={name}
             />
             <CardMedia
                 component="img"
                 height="140"
-                image={post.image}
+                image={image}
                 alt="post"
             />
             <CardContent>
@@ -80,19 +92,17 @@ export const Post = ({ post }) => {
                     {dateParsed}
                 </Typography>
                 <Typography gutterBottom variant="h5" component="div">
-                    {post.title}
+                    {title}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    {post.text}
+                    {text}
                 </Typography>
-                <Typography>
-                    <div className={style.tagListContainer}>
-                        {post.tags.map((tag) => <div className={style.tag}>{tag}</div>)}
-                    </div>
-                </Typography>
+                <div className={style.tagListContainer}>
+                    {tags.map((tag, i) => <div key={i} className={style.tag}>{tag}</div>)}
+                </div>
             </CardContent>
             <CardActions>
-                {favorites.includes(post._id) ? (
+                {favorites.includes(postId) ? (
                     <IconButton aria-label='add to favorites' onClick={removeFavorite}>
                         <FavoriteIcon />
                     </IconButton>
@@ -104,7 +114,7 @@ export const Post = ({ post }) => {
                 <Typography variant="body2" color="text.secondary">
                     {favoriteCounter}
                 </Typography>
-                {currentUser?._id === post.author._id ? (
+                {currentUser?._id === authorId ? (  //нет уверенности, что работает
                     (<IconButton aria-label="delete" onClick={deletePost}>
                         <DeleteIcon />
                     </IconButton>)
