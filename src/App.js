@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { PostList } from './components/PostList'
-import PostListContext from './contexts/postListContext'
+import GlobalContext from './contexts/globalContext'
 import api from './utils/api.js'
 import './index.css'
+import { Pagination } from './components/Pagination'
 
 export const App = () => {
   const [postList, setPostList] = useState(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const postsPerPage = 12
 
   useEffect(() => {
     api.getPosts()
@@ -14,11 +17,16 @@ export const App = () => {
 
   }, []);
 
+  const indexOfLastPost = currentPage * postsPerPage
+  const indexOfFirstPost = indexOfLastPost - postsPerPage
+  const currentPosts = postList?.slice(indexOfFirstPost, indexOfLastPost)
+
   return (
-    <PostListContext.Provider value={{ postList, setPostList }}>
+    <GlobalContext.Provider value={{ postList, setPostList, currentPosts, postsPerPage, setCurrentPage }}>
       <div className='appContainer'>
         <PostList />
+        <Pagination />
       </div>
-    </PostListContext.Provider>
+    </GlobalContext.Provider>
   )
 }
