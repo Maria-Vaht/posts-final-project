@@ -49,13 +49,12 @@ export const App = () => {
       favorites,
       setFavorites,
     }}>
-        <div className='app-container'>
+        <div className='appContainer'>
       <Header>
         <Logo />
       <FormDialog />
       <Info />
       </Header>
-    
       <div className='content_container'>
       <Routes>
         <Route path="/" 
@@ -66,13 +65,10 @@ export const App = () => {
         />
         <Route path="post/:postID" element={<PostPage/>} />
       </Routes>
-       
         </div>
-  
       <Pagination />
-      </div>
       <Footer />
-   
+      </div>
     </GlobalContext.Provider>
   )
 }

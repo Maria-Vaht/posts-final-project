@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import api from '../../utils/api';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -13,13 +13,15 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import DeleteIcon from '@mui/icons-material/Delete'
 import { IconButton } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
+import { Container } from '@mui/material';
+import { Navigate } from 'react-router-dom';
 
 export default function PostPage() {
 
     const [postItem, setPostItem] = useState(null)
     const params = useParams()
     const { favorites, favoriteCounter, addFavorite, removeFavorite, currentPosts } = useContext(GlobalContext)
-    
+    const navigate = useNavigate()
   
     useEffect(() => {
         api.getPosts(params.postID)
@@ -29,12 +31,15 @@ export default function PostPage() {
 
     
     return (
-       
-        <Card sx={{ maxWidth: 345 }} style = {{margin: "20px", padding: "10px"}}>
+        <Container>
+        <div>
+        <Button variant="outlined"  style={{marginTop: '10px', marginLeft:"30%" }} onClick={() => navigate('/')} >Назад</Button>
+      </div>
+        <Card sx={{ maxWidth: 500 }} style = {{marginTop: "20px", marginLeft: "30%", padding: "20px", position:"center",}}>
             <CardMedia
                 component="img"
                 alt="image"
-                height="140"
+                
                 image={postItem?.image}
             />
             <CardContent>
@@ -64,6 +69,7 @@ export default function PostPage() {
                 </Typography>
             </CardActions>
         </Card>
+        </Container>
     );
 
 }

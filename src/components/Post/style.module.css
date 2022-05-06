@@ -1,9 +1,11 @@
 .tagListContainer {
-    padding: 10px calc(50% - 496px); 
+    padding: 10px;
     display: flex;
+    margin: 20px;
 }
 
 .tag {
+   
     background-color: rgb(238, 241, 28);
     margin-right: 5px;
 }

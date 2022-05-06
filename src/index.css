@@ -7,3 +7,10 @@ html {
 body {
     font-family: 'Nunito', 'Arial', 'Helvetica', sans-serif;
 }
+.app-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100vh;
+} 
