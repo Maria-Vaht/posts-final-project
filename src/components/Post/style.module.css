@@ -1,4 +1,5 @@
 .tagListContainer {
+    padding: 10px calc(50% - 496px); 
     display: flex;
 }
 

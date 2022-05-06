@@ -1,5 +1,5 @@
 .postListContainer {
-    width: 100%;
+    padding: 20px calc(50% - 496px); 
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 16px;

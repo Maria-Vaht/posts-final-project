@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
+import { Link } from 'react-router-dom'
 import api from '../../utils/api'
 import GlobalContext from '../../contexts/globalContext'
 import style from './style.module.css'
@@ -92,7 +93,7 @@ export const Post = ({ post }) => {
                     {dateParsed}
                 </Typography>
                 <Typography gutterBottom variant="h5" component="div">
-                    {title}
+                <Link to={`post/${postId}`}> {title} </Link>
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                     {text}

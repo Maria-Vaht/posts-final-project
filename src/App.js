@@ -5,6 +5,13 @@ import api from './utils/api.js'
 import './index.css'
 import { Pagination } from './components/Pagination'
 import { FormDialog } from './components/FormDialog'
+import { Header } from './components/Header'
+import Logo from './components/Logo'
+import  {Info}  from './components/Info'
+import { Route, Routes } from 'react-router-dom'
+import Footer from './components/Footer'
+import  PostPage from './components/PostPage'
+
 
 export const App = () => {
   const [postList, setPostList] = useState(null)
@@ -31,6 +38,7 @@ export const App = () => {
   const currentPosts = postList?.slice(indexOfFirstPost, indexOfLastPost)
 
   return (
+    
     <GlobalContext.Provider value={{
       postList,
       setPostList,
@@ -41,11 +49,30 @@ export const App = () => {
       favorites,
       setFavorites,
     }}>
-      <div className='appContainer'>
-        <FormDialog />
-        <PostList />
-        <Pagination />
+        <div className='app-container'>
+      <Header>
+        <Logo />
+      <FormDialog />
+      <Info />
+      </Header>
+    
+      <div className='content_container'>
+      <Routes>
+        <Route path="/" 
+        element={<div className='content__cards'>
+        <PostList/>
+        </div>
+        }
+        />
+        <Route path="post/:postID" element={<PostPage/>} />
+      </Routes>
+       
+        </div>
+  
+      <Pagination />
       </div>
+      <Footer />
+   
     </GlobalContext.Provider>
   )
 }
