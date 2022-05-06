@@ -27,7 +27,7 @@ export const Pagination = () => {
     };
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', background: 'white' }}>
             <nav>
                 <List>
                     {items.map(({ page, type, selected, ...item }, index) => {

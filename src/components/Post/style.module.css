@@ -6,3 +6,10 @@
     background-color: rgb(238, 241, 28);
     margin-right: 5px;
 }
+
+.post {
+    background-color: blue;
+    grid-auto-flow: column;
+    align-self: center;
+    justify-self: center;
+}

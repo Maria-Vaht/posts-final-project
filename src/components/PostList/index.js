@@ -9,7 +9,7 @@ export const PostList = () => {
     return (
         <div className={style.postListContainer}>
             {currentPosts?.map(post => (
-                <Post key={post._id}
+                <Post className={style.post} key={post._id}
                     post={post}
                 />))}
         </div>

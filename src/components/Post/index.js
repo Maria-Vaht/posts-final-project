@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import api from '../../utils/api'
 import GlobalContext from '../../contexts/globalContext'
 import style from './style.module.css'
 import { Card, CardContent, CardMedia, CardActions, Typography, IconButton, CardHeader, Avatar } from '@mui/material'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined'
-import DeleteIcon from '@mui/icons-material/Delete'
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 
 export const Post = ({ post }) => {
     const { _id: postId,
@@ -15,17 +15,16 @@ export const Post = ({ post }) => {
         tags,
         likes,
         author: { avatar,
+            _id: authorId,
             name,
-            _id: authorId },
+            about, },
     } = post
 
-    const { setPostList, currentUser, favorites, setFavorites } = useContext(GlobalContext)
+    const { setPostList, currentUser, favorites, setFavorites, setSnackBarState, setConfirmDialogState } = useContext(GlobalContext)
     const [favoriteCounter, setFavoriteCounter] = useState(likes.length)
 
-
-
-    let dayjs = require('dayjs')
-    let dateParsed = dayjs(post['created_at']).format('DD-MM-YYYY HH:mm:ss')
+    const dayjs = require('dayjs')
+    const dateParsedCreatedAt = dayjs(post['created_at']).format('DD-MM-YYYY HH:mm:ss')
 
     const writeLS = (key, value) => {
         const storage = JSON.parse(localStorage.getItem(key)) || []
@@ -45,10 +44,14 @@ export const Post = ({ post }) => {
         setFavoriteCounter((prevState) => prevState + 1)
         api.addLike(postId)
             .then(() => {
-                alert('Лайк поставлен');
+                setSnackBarState({
+                    isOpen: true, msg: 'Лайк поставлен :)'
+                })
             })
             .catch(() => {
-                alert('Не удалось поставить лайк');
+                setSnackBarState({
+                    isOpen: true, msg: 'Не удалось поставить лайк :('
+                })
             });
     }
 
@@ -58,70 +61,74 @@ export const Post = ({ post }) => {
         setFavoriteCounter((prevState) => prevState - 1)
         api.deleteLike(postId)
             .then(() => {
-                alert('Лайк убран');
+                setSnackBarState({
+                    isOpen: true, msg: 'Лайк убран :)'
+                })
+                    .catch(() => {
+                        setSnackBarState({
+                            isOpen: true, msg: 'Не удалось убрать лайк :('
+                        })
+                    })
             })
-            .catch(() => {
-                alert('Не удалось убрать лайк')
-            })
-    }
-
-    const deletePost = () => {
-        if (confirm('Вы действительно хотите удалить пост?')) {
-            api.deletePostById(postId)
-                .then((deletedPost) => setPostList(prevState => prevState.filter((post) => postId !== deletedPost._id)))
-                .catch(err => alert(err))
-        }
     }
 
     return (
-        <Card sx={{ maxWidth: 345 }}>
-            <CardHeader
-                avatar={
-                    <Avatar src={avatar}></Avatar>
-                }
-                title={name}
-            />
-            <CardMedia
-                component="img"
-                height="140"
-                image={image}
-                alt="post"
-            />
-            <CardContent>
-                <Typography variant="body2" color="text.secondary">
-                    {dateParsed}
-                </Typography>
-                <Typography gutterBottom variant="h5" component="div">
-                    {title}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    {text}
-                </Typography>
-                <div className={style.tagListContainer}>
-                    {tags.map((tag, i) => <div key={i} className={style.tag}>{tag}</div>)}
-                </div>
-            </CardContent>
-            <CardActions>
-                {favorites.includes(postId) ? (
-                    <IconButton aria-label='add to favorites' onClick={removeFavorite}>
-                        <FavoriteIcon />
-                    </IconButton>
-                ) : (
-                    <IconButton aria-label='add to favorites' onClick={addFavorite}>
-                        <FavoriteBorderOutlinedIcon />
-                    </IconButton>
-                )}
-                <Typography variant="body2" color="text.secondary">
-                    {favoriteCounter}
-                </Typography>
-                {currentUser?._id === authorId ? (  //нет уверенности, что работает
-                    (<IconButton aria-label="delete" onClick={deletePost}>
-                        <DeleteIcon />
-                    </IconButton>)
-                ) : (
-                    null
-                )}
-            </CardActions>
-        </Card>
+        <div className={style.post}>
+            <Card sx={{ maxWidth: 345 }}>
+                <CardHeader
+                    avatar={
+                        <Avatar src={avatar}></Avatar>
+                    }
+                    title={name}
+                    subheader={about}
+                />
+                <CardMedia
+                    component="img"
+                    height="140"
+                    image={image}
+                    alt="post"
+                />
+                <CardContent>
+                    <Typography variant="body2" color="text.secondary">
+                        {dateParsedCreatedAt}
+                    </Typography>
+                    <Typography gutterBottom variant="h5" component="div">
+                        {title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        {text}
+                    </Typography>
+                    <div className={style.tagListContainer}>
+                        {tags.map((tag, i) => <div key={i} className={style.tag}>{tag}</div>)}
+                    </div>
+                </CardContent>
+                <CardActions>
+                    {favorites.includes(postId) ? (
+                        <IconButton aria-label='add to favorites' onClick={removeFavorite}>
+                            <FavoriteIcon />
+                        </IconButton>
+                    ) : (
+                        <IconButton aria-label='add to favorites' onClick={addFavorite}>
+                            <FavoriteBorderOutlinedIcon />
+                        </IconButton>
+                    )}
+                    <Typography variant="body2" color="text.secondary">
+                        {favoriteCounter}
+                    </Typography>
+                    {currentUser?._id === authorId ? (
+                        (<IconButton aria-label="delete" onClick={() => {
+                            setConfirmDialogState({
+                                isOpen: true,
+                                currentPostId: postId
+                            })
+                        }}>
+                            <DeleteOutlinedIcon />
+                        </IconButton>)
+                    ) : (
+                        null
+                    )}
+                </CardActions>
+            </Card>
+        </div>
     )
 }

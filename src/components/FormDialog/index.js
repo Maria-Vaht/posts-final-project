@@ -1,12 +1,6 @@
 import React, { useContext } from 'react'
 import GlobalContext from '../../contexts/globalContext'
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import { Dialog, Button, TextField, DialogActions, DialogTitle, DialogContent } from '@mui/material'
 import api from '../../utils/api'
 
 export const FormDialog = () => {
@@ -24,15 +18,19 @@ export const FormDialog = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        const { target } = e
-        api.createPost(target.title.value, target.text.value)
+        const {
+            target: { title, text, image, tags },
+        } = e;
+        // console.log(tags.value.trim().split(/[,]\s*|\s+/g))
+        const tagList = tags.value.trim().split(/[,]\s*|\s+/g)
+        api.createPost(title.value, text.value, image.value, tagList)
             .then((newPost) => setPostList(prevState => [...prevState, newPost]))
             .catch(err => alert(err))
     };
 
     return (
         <div>
-            <Button variant="outlined" onClick={handleClickOpen}>
+            <Button style={{ background: "green" }} onClick={handleClickOpen}>
                 New Post
             </Button>
             <form onSubmit={handleSubmit}>
@@ -61,13 +59,13 @@ export const FormDialog = () => {
                             fullWidth
                             variant="standard"
                         />
-                        {/* <TextField
+                        <TextField
                             margin="dense"
                             id="tags"
                             label="Tags"
                             fullWidth
                             variant="standard"
-                        /> */}
+                        />
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>

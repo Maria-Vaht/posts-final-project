@@ -5,6 +5,9 @@ import api from './utils/api.js'
 import './index.css'
 import { Pagination } from './components/Pagination'
 import { FormDialog } from './components/FormDialog'
+import { Snackbar } from './components/Snackbar'
+import { ConfirmDialog } from './components/ConfirmDialog'
+
 
 export const App = () => {
   const [postList, setPostList] = useState(null)
@@ -12,6 +15,15 @@ export const App = () => {
   const [favorites, setFavorites] = useState(JSON.parse(localStorage.getItem('favorites')) || []);
   const [currentPage, setCurrentPage] = useState(1)
   const postsPerPage = 12
+  const [snackBarState, setSnackBarState] = useState({
+    isOpen: false,
+    msg: null,
+  });
+
+  const [confirmDialogState, setConfirmDialogState] = useState({
+    isOpen: false,
+    currentPostId: null
+  })
 
   useEffect(() => {
     api.getPosts()
@@ -40,9 +52,15 @@ export const App = () => {
       currentUser,
       favorites,
       setFavorites,
+      snackBarState,
+      setSnackBarState,
+      confirmDialogState,
+      setConfirmDialogState,
     }}>
       <div className='appContainer'>
         <FormDialog />
+        <Snackbar />
+        <ConfirmDialog />
         <PostList />
         <Pagination />
       </div>

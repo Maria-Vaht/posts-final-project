@@ -27,7 +27,7 @@ class Api {
         }).then(onResponse)
     }
 
-    createPost(title, text, image) {
+    createPost(title, text, image, tagList) {
         return fetch(`${this._url}/posts`, {
             method: 'POST',
             headers: {
@@ -37,7 +37,8 @@ class Api {
             body: JSON.stringify({
                 'title': `${title}`,
                 'text': `${text}`,
-                'image': `${image}` || 'https://react-learning.ru/image-compressed/default-image.jpg',
+                'image': `${image}` || 'https://cdn.pixabay.com/photo/2015/10/06/19/28/trees-975091__480.jpg',
+                'tags': tagList,
             })
         }).then(onResponse)
     }
