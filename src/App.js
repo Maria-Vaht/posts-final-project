@@ -108,6 +108,7 @@ export const App = () => {
         <Snackbar />
         <ConfirmDialog />
         <Footer />
+        {/* qeq */}
       </div>
     </GlobalContext.Provider>
   )
