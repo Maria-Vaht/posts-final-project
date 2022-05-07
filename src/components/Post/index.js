@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import api from '../../utils/api'
 import GlobalContext from '../../contexts/globalContext'
 import style from './style.module.css'
@@ -77,7 +77,7 @@ export const Post = ({ post }) => {
     return (
         <div className={style.post}>
             <Card sx={{ maxWidth: 345 }}>
-                <div className={style.header}>
+                <div>
                     <CardHeader
                         avatar={
                             <Avatar src={avatar}></Avatar>
@@ -85,70 +85,70 @@ export const Post = ({ post }) => {
                         title={name}
                         subheader={about}
                     />
-                </div>
-                <CardMedia
-                    component="img"
-                    height="140"
-                    image={image}
-                    alt="post"
-                />
-                <CardContent>
-                    <Typography variant="body2" color="text.secondary">
-                        {dateParsedCreatedAt}
-                    </Typography>
-                    <div className={style.title}>
-                        <Typography gutterBottom variant="h5" component="div">
-                            {title}
-                        </Typography>
-                    </div>
-                    <div className={style.text}>
+                    <CardMedia
+                        component="img"
+                        height="140"
+                        image={image}
+                        alt="post"
+                    />
+                    <CardContent>
                         <Typography variant="body2" color="text.secondary">
-                            {text}
+                            {dateParsedCreatedAt}
                         </Typography>
-                    </div>
-                    <div className={style.tagListContainer}>
-                        {tags.map((tag, i) => <div key={i} className={style.tag}>{tag}</div>)}
-                    </div>
-                </CardContent>
-                <CardActions>
-                    {favorites.includes(postId) ? (
-                        <IconButton aria-label='add to favorites' onClick={removeFavorite}>
-                            <FavoriteIcon />
-                        </IconButton>
-                    ) : (
-                        <IconButton aria-label='add to favorites' onClick={addFavorite}>
-                            <FavoriteBorderOutlinedIcon />
-                        </IconButton>
-                    )}
-                    <Typography variant="body2" color="text.secondary">
-                        {favoriteCounter}
-                    </Typography>
-                    <Link to={'post/${postId}/edit'} onClick={() => {
-                        setEditPostDialogState({
-                            isOpen: true,
-                        })
-                    }}>
+                        <div className={style.title}>
+                            <Typography gutterBottom variant="h5" component="div">
+                                <Link to={`post/${postId}`}> {title} </Link>
+                            </Typography>
+                        </div>
+                        <div className={style.text}>
+                            <Typography variant="body2" color="text.secondary">
+                                {text}
+                            </Typography>
+                        </div>
+                        <div className={style.tagListContainer}>
+                            {tags.map((tag, i) => <div key={i} className={style.tag}>{tag}</div>)}
+                        </div>
+                    </CardContent>
+                    <CardActions>
+                        {favorites.includes(postId) ? (
+                            <IconButton aria-label='add to favorites' onClick={removeFavorite}>
+                                <FavoriteIcon />
+                            </IconButton>
+                        ) : (
+                            <IconButton aria-label='add to favorites' onClick={addFavorite}>
+                                <FavoriteBorderOutlinedIcon />
+                            </IconButton>
+                        )}
+                        <Typography variant="body2" color="text.secondary">
+                            {favoriteCounter}
+                        </Typography>
+                        <Link to={'post/${postId}/edit'} onClick={() => {
+                            setEditPostDialogState({
+                                isOpen: true,
+                            })
+                        }}>
+                            {currentUser?._id === authorId ? (
+                                (<IconButton>
+                                    <EditIcon />
+                                </IconButton>)
+                            ) : (
+                                null
+                            )}
+                        </Link>
                         {currentUser?._id === authorId ? (
-                            (<IconButton>
-                                <EditIcon />
+                            (<IconButton onClick={() => {
+                                setConfirmDialogState({
+                                    isOpen: true,
+                                    currentPostId: postId
+                                })
+                            }}>
+                                <DeleteOutlinedIcon />
                             </IconButton>)
                         ) : (
                             null
                         )}
-                    </Link>
-                    {currentUser?._id === authorId ? (
-                        (<IconButton onClick={() => {
-                            setConfirmDialogState({
-                                isOpen: true,
-                                currentPostId: postId
-                            })
-                        }}>
-                            <DeleteOutlinedIcon />
-                        </IconButton>)
-                    ) : (
-                        null
-                    )}
-                </CardActions>
+                    </CardActions>
+                </div>
             </Card>
         </div >
     )
