@@ -10,6 +10,7 @@ export const ConfirmDialog = () => {
     setConfirmDialogState(() => {
       return {
         isOpen: false,
+        currentPostId: null,
       };
     });
 

@@ -13,7 +13,7 @@ class Api {
     getCurrentUser() {
         return fetch(`${this._url}/users/me`, {
             headers: {
-                authorization: `Bearer ${this._token}`
+                'authorization': `Bearer ${this._token}`
             }
         }).then(onResponse)
     }
@@ -22,7 +22,7 @@ class Api {
         const requestUrl = postId ? `${this._url}/posts/${postId}` : `${this._url}/posts`;
         return fetch(requestUrl, {
             headers: {
-                authorization: `Bearer ${this._token}`
+                'authorization': `Bearer ${this._token}`
             }
         }).then(onResponse)
     }
@@ -31,8 +31,8 @@ class Api {
         return fetch(`${this._url}/posts`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'authorization': `Bearer ${this._token}`
+                'authorization': `Bearer ${this._token}`,
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 'title': `${title}`,
@@ -43,11 +43,22 @@ class Api {
         }).then(onResponse)
     }
 
+    editPost(postId, newPost) {
+        return fetch(`${this._url}/posts/${postId}`, {
+            method: 'PATCH',
+            headers: {
+                'authorization': `Bearer ${this._token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newPost),
+        }).then(onResponse)
+    }
+
     addLike(postId) {
         return fetch(`${this._url}/posts/likes/${postId}`, {
             method: 'PUT',
             headers: {
-                authorization: `Bearer ${this._token}`,
+                'authorization': `Bearer ${this._token}`,
             },
         }).then(onResponse);
     }
@@ -56,7 +67,7 @@ class Api {
         return fetch(`${this._url}/posts/likes/${postId}`, {
             method: 'DELETE',
             headers: {
-                authorization: `Bearer ${this._token}`,
+                'authorization': `Bearer ${this._token}`,
             },
         }).then(onResponse);
     }
@@ -65,7 +76,7 @@ class Api {
         return fetch(`${this._url}/posts/${id}`, {
             method: 'DELETE',
             headers: {
-                authorization: `Bearer ${this._token}`
+                'authorization': `Bearer ${this._token}`
             }
         }).then(onResponse)
     }

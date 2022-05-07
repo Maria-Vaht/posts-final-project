@@ -1,5 +1,6 @@
 .tagListContainer {
     display: flex;
+    height: 20px;
 }
 
 .tag {
@@ -8,8 +9,28 @@
 }
 
 .post {
-    background-color: blue;
-    grid-auto-flow: column;
-    align-self: center;
-    justify-self: center;
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin: 15px;
+    background-color: rgb(147, 253, 144);
+}
+
+.header {
+    height: 80px;
+}
+
+.title {
+    line-height: 30px;
+    height: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.text {
+    line-height: 20px;
+    height: 80px;
+    line-height: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

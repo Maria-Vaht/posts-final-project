@@ -6,6 +6,8 @@ import { Card, CardContent, CardMedia, CardActions, Typography, IconButton, Card
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
+import EditIcon from '@mui/icons-material/Edit'
+import { Routes, Route, Link, BrowserRouter } from 'react-router-dom'
 
 export const Post = ({ post }) => {
     const { _id: postId,
@@ -20,7 +22,7 @@ export const Post = ({ post }) => {
             about, },
     } = post
 
-    const { setPostList, currentUser, favorites, setFavorites, setSnackBarState, setConfirmDialogState } = useContext(GlobalContext)
+    const { setPostList, currentUser, favorites, setFavorites, setSnackBarState, setConfirmDialogState, setEditPostDialogState } = useContext(GlobalContext)
     const [favoriteCounter, setFavoriteCounter] = useState(likes.length)
 
     const dayjs = require('dayjs')
@@ -75,13 +77,15 @@ export const Post = ({ post }) => {
     return (
         <div className={style.post}>
             <Card sx={{ maxWidth: 345 }}>
-                <CardHeader
-                    avatar={
-                        <Avatar src={avatar}></Avatar>
-                    }
-                    title={name}
-                    subheader={about}
-                />
+                <div className={style.header}>
+                    <CardHeader
+                        avatar={
+                            <Avatar src={avatar}></Avatar>
+                        }
+                        title={name}
+                        subheader={about}
+                    />
+                </div>
                 <CardMedia
                     component="img"
                     height="140"
@@ -92,12 +96,16 @@ export const Post = ({ post }) => {
                     <Typography variant="body2" color="text.secondary">
                         {dateParsedCreatedAt}
                     </Typography>
-                    <Typography gutterBottom variant="h5" component="div">
-                        {title}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        {text}
-                    </Typography>
+                    <div className={style.title}>
+                        <Typography gutterBottom variant="h5" component="div">
+                            {title}
+                        </Typography>
+                    </div>
+                    <div className={style.text}>
+                        <Typography variant="body2" color="text.secondary">
+                            {text}
+                        </Typography>
+                    </div>
                     <div className={style.tagListContainer}>
                         {tags.map((tag, i) => <div key={i} className={style.tag}>{tag}</div>)}
                     </div>
@@ -115,8 +123,21 @@ export const Post = ({ post }) => {
                     <Typography variant="body2" color="text.secondary">
                         {favoriteCounter}
                     </Typography>
+                    <Link to={'post/${postId}/edit'} onClick={() => {
+                        setEditPostDialogState({
+                            isOpen: true,
+                        })
+                    }}>
+                        {currentUser?._id === authorId ? (
+                            (<IconButton>
+                                <EditIcon />
+                            </IconButton>)
+                        ) : (
+                            null
+                        )}
+                    </Link>
                     {currentUser?._id === authorId ? (
-                        (<IconButton aria-label="delete" onClick={() => {
+                        (<IconButton onClick={() => {
                             setConfirmDialogState({
                                 isOpen: true,
                                 currentPostId: postId
@@ -129,6 +150,6 @@ export const Post = ({ post }) => {
                     )}
                 </CardActions>
             </Card>
-        </div>
+        </div >
     )
 }

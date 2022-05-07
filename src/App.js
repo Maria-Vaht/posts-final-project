@@ -4,9 +4,11 @@ import GlobalContext from './contexts/globalContext'
 import api from './utils/api.js'
 import './index.css'
 import { Pagination } from './components/Pagination'
-import { FormDialog } from './components/FormDialog'
+import { CreatePostDialog } from './components/CreatePostDialog'
+import { EditPostDialog } from './components/EditPostDialog'
 import { Snackbar } from './components/Snackbar'
 import { ConfirmDialog } from './components/ConfirmDialog'
+import { Routes, Route, Link, BrowserRouter } from 'react-router-dom'
 
 
 export const App = () => {
@@ -15,10 +17,20 @@ export const App = () => {
   const [favorites, setFavorites] = useState(JSON.parse(localStorage.getItem('favorites')) || []);
   const [currentPage, setCurrentPage] = useState(1)
   const postsPerPage = 12
+
   const [snackBarState, setSnackBarState] = useState({
     isOpen: false,
     msg: null,
   });
+
+  const [createPostDialogState, setCreatePostDialogState] = useState({
+    isOpen: false,
+  })
+
+  const [editPostDialogState, setEditPostDialogState] = useState({
+    isOpen: false,
+  })
+
 
   const [confirmDialogState, setConfirmDialogState] = useState({
     isOpen: false,
@@ -56,13 +68,31 @@ export const App = () => {
       setSnackBarState,
       confirmDialogState,
       setConfirmDialogState,
+      createPostDialogState,
+      setCreatePostDialogState,
+      editPostDialogState,
+      setEditPostDialogState,
+
     }}>
       <div className='appContainer'>
-        <FormDialog />
-        <Snackbar />
-        <ConfirmDialog />
-        <PostList />
-        <Pagination />
+        <BrowserRouter>
+          <Routes>
+            {/* <Route path='post/create' element={<CreatePostDialog />} /> */}
+            <Route path='post/:PostId/edit' element={<EditPostDialog />} />
+          </Routes>
+          <button onClick={() => {
+            createPostDialogState({
+              isOpen: true,
+            })
+          }}>
+            New post
+          </button>
+          <CreatePostDialog />
+          <Snackbar />
+          <ConfirmDialog />
+          <PostList />
+          <Pagination />
+        </BrowserRouter>
       </div>
     </GlobalContext.Provider>
   )
