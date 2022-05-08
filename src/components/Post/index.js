@@ -96,12 +96,16 @@ export const Post = ({ post }) => {
                         </Typography>
                         <div className={style.title}>
                             <Typography gutterBottom variant="h5" component="div">
-                                <Link to={`post/${post._id}`}> {title} </Link>
+                                <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`post/${post._id}`}>
+                                    {title}
+                                </Link>
                             </Typography>
                         </div>
                         <div className={style.text}>
                             <Typography variant="body2" color="text.secondary">
-                                {text}
+                                <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`post/${post._id}`}>
+                                    {text}
+                                </Link>
                             </Typography>
                         </div>
                         <div className={style.tagListContainer}>
@@ -111,7 +115,7 @@ export const Post = ({ post }) => {
                     <CardActions>
                         {favorites.includes(post._id) ? (
                             <IconButton aria-label='add to favorites' onClick={removeFavorite}>
-                                <FavoriteIcon />
+                                <FavoriteIcon color='warning' />
                             </IconButton>
                         ) : (
                             <IconButton aria-label='add to favorites' onClick={addFavorite}>
@@ -148,7 +152,7 @@ export const Post = ({ post }) => {
                         )}
                     </CardActions>
                 </div>
-            </Card>
+            </Card >
         </div >
     )
 }

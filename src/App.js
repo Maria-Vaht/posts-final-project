@@ -10,7 +10,7 @@ import { EditPostDialog } from './components/EditPostDialog'
 import { Snackbar } from './components/Snackbar'
 import { ConfirmDialog } from './components/ConfirmDialog'
 import { Header } from './components/Header'
-import Logo from './components/Logo'
+
 import { Info } from './components/Info'
 import Footer from './components/Footer'
 import PostPage from './components/PostPage'
@@ -34,6 +34,8 @@ export const App = () => {
   const [favorites, setFavorites] = useState(JSON.parse(localStorage.getItem('favorites')) || []);
   const [currentPage, setCurrentPage] = useState(1)
   const postsPerPage = 12
+  const [comments, setComments] = useState(null);
+
 
   const [snackBarState, setSnackBarState] = useState({
     isOpen: false,
@@ -54,7 +56,10 @@ export const App = () => {
     postId: null,
   })
 
+
+
   useEffect(() => {
+
     api.getPosts()
       .then((posts) => setPostList(posts))
       .catch(err => alert(err));
@@ -62,6 +67,7 @@ export const App = () => {
   }, []);
 
   useEffect(() => {
+
     api.getCurrentUser()
       .then((user) => setCurrentUser(user))
       .catch(err => alert(err));
@@ -94,7 +100,6 @@ export const App = () => {
       }}>
         <div className='appContainer'>
           <Header>
-            <Logo />
             <Button className='buttonMUI' variant='contained' color='secondary' onClick={() => {
               setCreatePostDialogState({
                 isOpen: true,
@@ -114,7 +119,9 @@ export const App = () => {
             />
             <Route path="post/:postID" element={<PostPage />} />
             <Route path='post/:PostId/edit' element={<EditPostDialog />} />
-
+            {/* <Route path="/profile" element={<Profile />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} /> */}
           </Routes>
           <CreatePostDialog />
           <ConfirmDialog />
