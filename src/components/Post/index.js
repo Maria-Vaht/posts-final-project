@@ -22,7 +22,7 @@ export const Post = ({ post }) => {
             about, },
     } = post
 
-    const { setPostList, currentUser, favorites, setFavorites, setSnackBarState, setConfirmDialogState, setEditPostDialogState } = useContext(GlobalContext)
+    const { setPostList, currentUser, favorites, setFavorites, setSnackBarState, setConfirmDialogState, setEditPostDialogState} = useContext(GlobalContext)
     const [favoriteCounter, setFavoriteCounter] = useState(likes.length)
 
     const dayjs = require('dayjs')
@@ -44,7 +44,8 @@ export const Post = ({ post }) => {
         writeLS('favorites', postId)
         setFavorites((prevState) => [...prevState, postId])
         setFavoriteCounter((prevState) => prevState + 1)
-        api.addLike(postId)
+       
+ api.addLike(postId)
             .then(() => {
                 setSnackBarState({
                     isOpen: true, msg: 'Лайк поставлен :)'
@@ -61,6 +62,7 @@ export const Post = ({ post }) => {
         removeLS('favorites', postId)
         setFavorites((prevState) => prevState.filter((postId) => postId !== postId))
         setFavoriteCounter((prevState) => prevState - 1)
+        
         api.deleteLike(postId)
             .then(() => {
                 setSnackBarState({
@@ -112,7 +114,7 @@ export const Post = ({ post }) => {
                     <CardActions>
                         {favorites.includes(postId) ? (
                             <IconButton aria-label='add to favorites' onClick={removeFavorite}>
-                                <FavoriteIcon />
+                                <FavoriteIcon color='warning' />
                             </IconButton>
                         ) : (
                             <IconButton aria-label='add to favorites' onClick={addFavorite}>

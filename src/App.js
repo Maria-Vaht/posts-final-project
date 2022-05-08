@@ -10,19 +10,26 @@ import { Snackbar } from './components/Snackbar'
 import { ConfirmDialog } from './components/ConfirmDialog'
 import { Routes, Route, Link, BrowserRouter } from 'react-router-dom'
 import { Header } from './components/Header'
-import Logo from './components/Logo'
+
 import { Info } from './components/Info'
 import Footer from './components/Footer'
 import PostPage from './components/PostPage'
 import { Button } from '@mui/material'
+import {Profile}  from './components/Profile'
+import { SignIn } from './components/SignIn'
+import { SignUp } from './components/SignUp'
 
 
 export const App = () => {
+
+  
   const [postList, setPostList] = useState(null)
   const [currentUser, setCurrentUser] = useState(null)
   const [favorites, setFavorites] = useState(JSON.parse(localStorage.getItem('favorites')) || []);
   const [currentPage, setCurrentPage] = useState(1)
   const postsPerPage = 12
+  const [comments, setComments] = useState(null);
+  
 
   const [snackBarState, setSnackBarState] = useState({
     isOpen: false,
@@ -43,7 +50,10 @@ export const App = () => {
     currentPostId: null
   })
 
+
+
   useEffect(() => {
+    
     api.getPosts()
       .then((posts) => setPostList(posts))
       .catch(err => alert(err));
@@ -51,6 +61,7 @@ export const App = () => {
   }, []);
 
   useEffect(() => {
+   
     api.getCurrentUser()
       .then((user) => setCurrentUser(user))
       .catch(err => alert(err));
@@ -61,7 +72,7 @@ export const App = () => {
   const currentPosts = postList?.slice(indexOfFirstPost, indexOfLastPost)
 
   return (
-
+   
     <GlobalContext.Provider value={{
       postList,
       setPostList,
@@ -81,9 +92,9 @@ export const App = () => {
       setEditPostDialogState,
 
     }}>
+       
       <div className='appContainer'>
         <Header>
-          <Logo />
           <Button onClick={() => {
             createPostDialogState({
               isOpen: true,
@@ -91,6 +102,7 @@ export const App = () => {
           }}>
             New post
           </Button>
+
           <Info />
         </Header>
         <Routes>
@@ -103,6 +115,9 @@ export const App = () => {
           />
           <Route path="post/:postID" element={<PostPage />} />
           <Route path='post/:PostId/edit' element={<EditPostDialog />} />
+          {/* <Route path="/profile" element={<Profile />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} /> */}
         </Routes>
         <CreatePostDialog />
         <Snackbar />
@@ -110,6 +125,7 @@ export const App = () => {
         <Footer />
         {/* qeq */}
       </div>
+     
     </GlobalContext.Provider>
   )
 }

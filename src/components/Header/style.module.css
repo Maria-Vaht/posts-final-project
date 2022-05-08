@@ -1,15 +1,20 @@
 
 .header {
-	border-bottom: 1px solid rgb(58, 55, 55);
 	width: 100%;
-	padding: 20px calc(50% - 496px); 
+	height: 100px;
+	padding: 5px;
+	margin-bottom: 25px;
+	background-color: orange;
+
 }
 
 .header__wrapper {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
-	gap: 80px;
+	justify-content: center;
+	padding: 10px; 
+	margin: 10px;
+	gap: 100px;
 }
 
 @media (max-width: 700px) {
