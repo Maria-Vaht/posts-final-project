@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import { PostList } from './components/PostList'
 import GlobalContext from './contexts/globalContext'
 import api from './utils/api.js'
@@ -8,21 +9,33 @@ import { CreatePostDialog } from './components/CreatePostDialog'
 import { EditPostDialog } from './components/EditPostDialog'
 import { Snackbar } from './components/Snackbar'
 import { ConfirmDialog } from './components/ConfirmDialog'
-import { Routes, Route, Link, BrowserRouter } from 'react-router-dom'
 import { Header } from './components/Header'
-import Logo from './components/Logo'
+
 import { Info } from './components/Info'
 import Footer from './components/Footer'
 import PostPage from './components/PostPage'
-import { Button } from '@mui/material'
+import { Button, createTheme, ThemeProvider } from '@mui/material'
 
 
 export const App = () => {
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#9db25c',
+      },
+      secondary: {
+        main: '#eadb5c',
+      },
+    },
+  });
+
   const [postList, setPostList] = useState(null)
   const [currentUser, setCurrentUser] = useState(null)
   const [favorites, setFavorites] = useState(JSON.parse(localStorage.getItem('favorites')) || []);
   const [currentPage, setCurrentPage] = useState(1)
   const postsPerPage = 12
+  const [comments, setComments] = useState(null);
+
 
   const [snackBarState, setSnackBarState] = useState({
     isOpen: false,
@@ -40,10 +53,13 @@ export const App = () => {
 
   const [confirmDialogState, setConfirmDialogState] = useState({
     isOpen: false,
-    currentPostId: null
+    postId: null,
   })
 
+
+
   useEffect(() => {
+
     api.getPosts()
       .then((posts) => setPostList(posts))
       .catch(err => alert(err));
@@ -51,6 +67,7 @@ export const App = () => {
   }, []);
 
   useEffect(() => {
+
     api.getCurrentUser()
       .then((user) => setCurrentUser(user))
       .catch(err => alert(err));
@@ -61,55 +78,57 @@ export const App = () => {
   const currentPosts = postList?.slice(indexOfFirstPost, indexOfLastPost)
 
   return (
+    <ThemeProvider theme={theme}>
+      <GlobalContext.Provider value={{
+        postList,
+        setPostList,
+        currentPosts,
+        postsPerPage,
+        setCurrentPage,
+        currentUser,
+        favorites,
+        setFavorites,
+        snackBarState,
+        setSnackBarState,
+        confirmDialogState,
+        setConfirmDialogState,
+        createPostDialogState,
+        setCreatePostDialogState,
+        editPostDialogState,
+        setEditPostDialogState,
 
-    <GlobalContext.Provider value={{
-      postList,
-      setPostList,
-      currentPosts,
-      postsPerPage,
-      setCurrentPage,
-      currentUser,
-      favorites,
-      setFavorites,
-      snackBarState,
-      setSnackBarState,
-      confirmDialogState,
-      setConfirmDialogState,
-      createPostDialogState,
-      setCreatePostDialogState,
-      editPostDialogState,
-      setEditPostDialogState,
-
-    }}>
-      <div className='appContainer'>
-        <Header>
-          <Logo />
-          <Button onClick={() => {
-            createPostDialogState({
-              isOpen: true,
-            })
-          }}>
-            New post
-          </Button>
-          <Info />
-        </Header>
-        <Routes>
-          <Route path="/"
-            element={<div className='content__cards'>
-              <PostList />
-              <Pagination />
-            </div>
-            }
-          />
-          <Route path="post/:postID" element={<PostPage />} />
-          <Route path='post/:PostId/edit' element={<EditPostDialog />} />
-        </Routes>
-        <CreatePostDialog />
-        <Snackbar />
-        <ConfirmDialog />
-        <Footer />
-        {/* qeq */}
-      </div>
-    </GlobalContext.Provider>
+      }}>
+        <div className='appContainer'>
+          <Header>
+            <Button className='buttonMUI' variant='contained' color='secondary' onClick={() => {
+              setCreatePostDialogState({
+                isOpen: true,
+              })
+            }}>
+              New post
+            </Button>
+            <Info />
+          </Header>
+          <Routes>
+            <Route path="/"
+              element={<div className='content__cards'>
+                <PostList />
+                <Pagination />
+              </div>
+              }
+            />
+            <Route path="post/:postID" element={<PostPage />} />
+            <Route path='post/:PostId/edit' element={<EditPostDialog />} />
+            {/* <Route path="/profile" element={<Profile />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} /> */}
+          </Routes>
+          <CreatePostDialog />
+          <ConfirmDialog />
+          <Snackbar />
+          <Footer />
+        </div>
+      </GlobalContext.Provider>
+    </ThemeProvider>
   )
 }

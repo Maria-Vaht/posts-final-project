@@ -13,7 +13,6 @@
     flex-direction: column;
     width: 300px;
     margin: 15px;
-    background-color: rgb(147, 253, 144);
 }
 
 .title {
@@ -24,6 +23,7 @@
 }
 
 .text {
+    margin-top: 5px;
     line-height: 20px;
     height: 80px;
     line-height: 5px;

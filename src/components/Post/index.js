@@ -10,8 +10,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import { Routes, Route, Link, BrowserRouter } from 'react-router-dom'
 
 export const Post = ({ post }) => {
-    const { _id: postId,
-        title,
+    const { title,
         image,
         text,
         tags,
@@ -41,10 +40,10 @@ export const Post = ({ post }) => {
     }
 
     const addFavorite = () => {
-        writeLS('favorites', postId)
-        setFavorites((prevState) => [...prevState, postId])
+        writeLS('favorites', post._id)
+        setFavorites((prevState) => [...prevState, post._id])
         setFavoriteCounter((prevState) => prevState + 1)
-        api.addLike(postId)
+        api.addLike(post._id)
             .then(() => {
                 setSnackBarState({
                     isOpen: true, msg: 'Лайк поставлен :)'
@@ -58,10 +57,10 @@ export const Post = ({ post }) => {
     }
 
     const removeFavorite = () => {
-        removeLS('favorites', postId)
-        setFavorites((prevState) => prevState.filter((postId) => postId !== postId))
+        removeLS('favorites', post._id)
+        setFavorites((prevState) => prevState.filter((postId) => postId !== post._id))
         setFavoriteCounter((prevState) => prevState - 1)
-        api.deleteLike(postId)
+        api.deleteLike(post._id)
             .then(() => {
                 setSnackBarState({
                     isOpen: true, msg: 'Лайк убран :)'
@@ -97,12 +96,16 @@ export const Post = ({ post }) => {
                         </Typography>
                         <div className={style.title}>
                             <Typography gutterBottom variant="h5" component="div">
-                                <Link to={`post/${postId}`}> {title} </Link>
+                                <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`post/${post._id}`}>
+                                    {title}
+                                </Link>
                             </Typography>
                         </div>
                         <div className={style.text}>
                             <Typography variant="body2" color="text.secondary">
-                                {text}
+                                <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`post/${post._id}`}>
+                                    {text}
+                                </Link>
                             </Typography>
                         </div>
                         <div className={style.tagListContainer}>
@@ -110,9 +113,9 @@ export const Post = ({ post }) => {
                         </div>
                     </CardContent>
                     <CardActions>
-                        {favorites.includes(postId) ? (
+                        {favorites.includes(post._id) ? (
                             <IconButton aria-label='add to favorites' onClick={removeFavorite}>
-                                <FavoriteIcon />
+                                <FavoriteIcon color='warning' />
                             </IconButton>
                         ) : (
                             <IconButton aria-label='add to favorites' onClick={addFavorite}>
@@ -122,7 +125,7 @@ export const Post = ({ post }) => {
                         <Typography variant="body2" color="text.secondary">
                             {favoriteCounter}
                         </Typography>
-                        <Link to={'post/${postId}/edit'} onClick={() => {
+                        <Link to={`post/${post._id}/edit`} onClick={() => {
                             setEditPostDialogState({
                                 isOpen: true,
                             })
@@ -139,7 +142,7 @@ export const Post = ({ post }) => {
                             (<IconButton onClick={() => {
                                 setConfirmDialogState({
                                     isOpen: true,
-                                    currentPostId: postId
+                                    postId: post._id,
                                 })
                             }}>
                                 <DeleteOutlinedIcon />
@@ -149,7 +152,7 @@ export const Post = ({ post }) => {
                         )}
                     </CardActions>
                 </div>
-            </Card>
+            </Card >
         </div >
     )
 }

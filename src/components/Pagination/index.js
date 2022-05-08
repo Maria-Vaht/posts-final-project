@@ -1,14 +1,8 @@
 import React, { useContext } from 'react'
 import usePagination from '@mui/material/usePagination'
 import GlobalContext from '../../contexts/globalContext'
-import { styled, Button } from '@mui/material'
-
-const List = styled('ul')({
-    listStyle: 'none',
-    padding: 0,
-    margin: 10,
-    display: 'flex',
-});
+import { styled, Button, Typography } from '@mui/material'
+import style from './style.module.css'
 
 export const Pagination = () => {
     const { postList, postsPerPage, setCurrentPage } = useContext(GlobalContext)
@@ -26,36 +20,42 @@ export const Pagination = () => {
         setCurrentPage(pageNumber)
     };
 
+    const List = styled('ul')({
+        listStyle: 'none',
+        padding: 0,
+        margin: 10,
+        display: 'flex',
+    });
+
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', background: 'white' }}>
+        <div className={style.paginationContainer}>
             <nav>
                 <List>
                     {items.map(({ page, type, selected, ...item }, index) => {
                         let children = null;
                         if (type === 'start-ellipsis' || type === 'end-ellipsis') {
-                            children = '…';
+                            children = (
+                                <Typography variant="h5" color="black" >
+                                    ...
+                                </Typography>
+                            )
                         } else if (type === 'page') {
                             children = (
-                                <Button
-                                    // className={style.paginationButton}
-                                    size="small"
-                                    type="button"
-                                    style={{
-                                        fontWeight: selected ? 'bold' : undefined,
-                                    }}
+                                <button 
                                     {...item}
+                                    style={{
+                                        fontWeight: selected ? 'bold' : 'undefined',
+                                    }}
                                 >
                                     {page}
-                                </Button>
+                                </button>
                             );
                         } else {
                             children = (
-                                <Button
-                                    // className={style.paginationButton}
-                                    size="small"
-                                    type="button" {...item}>
+                                <button 
+                                    {...item}>
                                     {type}
-                                </Button>
+                                </button>
                             );
                         }
 

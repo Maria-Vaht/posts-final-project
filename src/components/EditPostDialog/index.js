@@ -2,10 +2,13 @@ import React, { useState, useEffect, useContext } from 'react'
 import GlobalContext from '../../contexts/globalContext'
 import { Dialog, Button, TextField, DialogActions, DialogTitle, DialogContent } from '@mui/material'
 import api from '../../utils/api'
+import { useNavigate, useParams } from 'react-router-dom';
 
 export const EditPostDialog = () => {
     const { editPostDialogState, setEditPostDialogState, setPostList } = useContext(GlobalContext)
-    const [open, setOpen] = useState(true);
+
+    const params = useParams()
+    const navigate = useNavigate()
 
     const [title, setTitle] = useState('');
     const [text, setText] = useState('');
@@ -13,36 +16,35 @@ export const EditPostDialog = () => {
     const [tags, setTags] = useState('');
 
     useEffect(() => {
-        api.getPosts('626049750cdd7d3fd52f85d9')
-            .then((post) => {
-                setTitle(post?.title)
+        api.getPosts(params.PostId)
+            .then(({ title, text, image, tags }) => {
+                setTitle(title)
+                setText(text)
+                setImage(image)
+                setTags(tags.join(', '))
             })
             .catch(err => alert(err));
     }, []);
 
-    const handleClose = () =>
+    const handleClose = () => {
         setEditPostDialogState(() => {
             return {
                 isOpen: false,
             };
-        });
-
-    // const handleClose = () => {
-    //     setOpen(false);
-    // };
+        })
+        navigate('/')
+    }
 
     const handleSubmit = () => {
-        const tagList = tags.trim().split(/[,]\s*|\s+/g)
-        api.createPost(title, text, image, tagList)
-            .then((newPost) => setPostList(prevState => [newPost, ...prevState]))
+        api.editPost(params.PostId, title, text, image, tags)
+            .then(() => handleClose())
             .catch(err => alert(err))
-            .finally(() => handleClose())
     };
 
     return (
         <div>
             <Dialog disablePortal={true} open={editPostDialogState.isOpen} onClose={handleClose}>
-                <DialogTitle>Create new post</DialogTitle>
+                <DialogTitle>Edit post</DialogTitle>
                 <DialogContent>
                     <TextField
                         autoFocus
@@ -92,7 +94,7 @@ export const EditPostDialog = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleSubmit}>Create</Button>
+                    <Button onClick={handleSubmit}>Edit</Button>
                 </DialogActions>
             </Dialog>
         </div>

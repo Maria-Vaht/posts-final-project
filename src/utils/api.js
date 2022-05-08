@@ -27,7 +27,8 @@ class Api {
         }).then(onResponse)
     }
 
-    createPost(title, text, image, tagList) {
+    createPost(title, text, image, tags) {
+        const tagList = tags.trim().split(/[,]\s*|\s+/g)
         return fetch(`${this._url}/posts`, {
             method: 'POST',
             headers: {
@@ -43,14 +44,20 @@ class Api {
         }).then(onResponse)
     }
 
-    editPost(postId, newPost) {
+    editPost(postId, title, text, image, tags) {
+        const tagList = tags.trim().split(/[,]\s*|\s+/g)
         return fetch(`${this._url}/posts/${postId}`, {
             method: 'PATCH',
             headers: {
                 'authorization': `Bearer ${this._token}`,
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(newPost),
+            body: JSON.stringify({
+                'title': `${title}`,
+                'text': `${text}`,
+                'image': `${image}` || 'https://cdn.pixabay.com/photo/2015/10/06/19/28/trees-975091__480.jpg',
+                'tags': tagList,
+            }),
         }).then(onResponse)
     }
 
@@ -80,6 +87,26 @@ class Api {
             }
         }).then(onResponse)
     }
+    getComments(id){
+        return fetch(`${this._url}/posts/comments/${id}`, {
+            headers: {
+                authorization: `Bearer ${this._token}`,
+                }
+        }).then(onResponse)
+
+    }
+    addComment(id, comment) {
+        return fetch(`${this._url}/posts/comments/${id}`, {
+            method: 'POST',
+            headers: {
+                authorization: `Bearer ${this._token}`,
+                'Content-Type': 'application/json',
+                },
+            body: JSON.stringify(comment),
+        }).then(onResponse)
+    }
 }
+
+
 
 export default new Api(config)
