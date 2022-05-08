@@ -2,21 +2,27 @@ import React, { useContext } from 'react'
 import GlobalContext from '../../contexts/globalContext'
 import api from '../../utils/api'
 import { Dialog, Button, DialogActions, DialogContent, DialogContentText } from '@mui/material'
+// import { useNavigate, useParams } from 'react-router-dom';
 
 export const ConfirmDialog = () => {
-  const { confirmDialogState: { isOpen, currentPostId }, setConfirmDialogState, setPostList } = useContext(GlobalContext)
+  const { confirmDialogState: { isOpen, postId }, setConfirmDialogState, setPostList } = useContext(GlobalContext)
 
-  const handleClose = () =>
+  // const params = useParams()
+  // const navigate = useNavigate()
+
+  const handleClose = () => {
     setConfirmDialogState(() => {
       return {
         isOpen: false,
-        currentPostId: null,
+        postId: null,
       };
     });
+    // navigate('/')
+  }
 
   const deletePost = () => {
-    api.deletePostById(currentPostId)
-      .then((deletedPost) => setPostList(prevState => prevState.filter((post) => currentPostId !== deletedPost._id)))
+    api.deletePostById(postId)
+      .then(() => setPostList(prevState => prevState.filter((post) => post._id !== postId)))
       .catch(err => alert(err))
       .finally(() => handleClose())
   }

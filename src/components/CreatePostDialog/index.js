@@ -7,7 +7,7 @@ export const CreatePostDialog = () => {
     const { createPostDialogState, setCreatePostDialogState, setPostList } = useContext(GlobalContext)
 
     const handleClose = () =>
-        setFormDialogState(() => {
+        setCreatePostDialogState(() => {
             return {
                 isOpen: false,
             };
@@ -18,8 +18,7 @@ export const CreatePostDialog = () => {
         const {
             target: { title, text, image, tags },
         } = e;
-        const tagList = tags.value.trim().split(/[,]\s*|\s+/g)
-        api.createPost(title.value, text.value, image.value, tagList)
+        api.createPost(title.value, text.value, image.value, tags.value)
             .then((newPost) => setPostList(prevState => [...prevState, newPost]))
             .catch(err => alert(err))
     };
