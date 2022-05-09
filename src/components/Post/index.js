@@ -1,13 +1,16 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import api from '../../utils/api'
 import GlobalContext from '../../contexts/globalContext'
 import style from './style.module.css'
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { Card, CardContent, CardMedia, CardActions, Typography, IconButton, CardHeader, Avatar } from '@mui/material'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
+import CommentIcon from '@mui/icons-material/Comment';
+import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import EditIcon from '@mui/icons-material/Edit'
-import { Routes, Route, Link, BrowserRouter } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 export const Post = ({ post }) => {
     const { title,
@@ -15,29 +18,31 @@ export const Post = ({ post }) => {
         text,
         tags,
         likes,
+        comments,
         author: { avatar,
             _id: authorId,
             name,
             about, },
     } = post
 
-    const { setPostList, currentUser, favorites, setFavorites, setSnackBarState, setConfirmDialogState, setEditPostDialogState } = useContext(GlobalContext)
+    const { writeLS, removeLS } = useLocalStorage();
+    const { setPostList, currentUser, favorites, setFavorites, setSnackBarState, setConfirmDialogState, setFormDialogState, currentPosts } = useContext(GlobalContext)
     const [favoriteCounter, setFavoriteCounter] = useState(likes.length)
 
     const dayjs = require('dayjs')
     const dateParsedCreatedAt = dayjs(post['created_at']).format('DD-MM-YYYY HH:mm:ss')
 
-    const writeLS = (key, value) => {
-        const storage = JSON.parse(localStorage.getItem(key)) || []
-        storage.push(value)
-        localStorage.setItem(key, JSON.stringify(storage))
-    }
+    // const writeLS = (key, value) => {
+    //     const storage = JSON.parse(localStorage.getItem(key)) || []
+    //     storage.push(value)
+    //     localStorage.setItem(key, JSON.stringify(storage))
+    // }
 
-    const removeLS = (key, value) => {
-        const storage = JSON.parse(localStorage.getItem(key))
-        const filteredStorage = storage.filter((item) => item !== value)
-        localStorage.setItem(key, JSON.stringify(filteredStorage))
-    }
+    // const removeLS = (key, value) => {
+    //     const storage = JSON.parse(localStorage.getItem(key))
+    //     const filteredStorage = storage.filter((item) => item !== value)
+    //     localStorage.setItem(key, JSON.stringify(filteredStorage))
+    // }
 
     const addFavorite = () => {
         writeLS('favorites', post._id)
@@ -125,19 +130,24 @@ export const Post = ({ post }) => {
                         <Typography variant="body2" color="text.secondary">
                             {favoriteCounter}
                         </Typography>
-                        <Link to={`post/${post._id}/edit`} onClick={() => {
-                            setEditPostDialogState({
-                                isOpen: true,
-                            })
-                        }}>
-                            {currentUser?._id === authorId ? (
-                                (<IconButton>
-                                    <EditIcon />
-                                </IconButton>)
-                            ) : (
-                                null
-                            )}
-                        </Link>
+                        <IconButton>
+                            <CommentOutlinedIcon />
+                        </IconButton>
+                        <Typography variant="body2" color="text.secondary">
+                            {comments.length}
+                        </Typography>
+                        {currentUser?._id === authorId ? (
+                            (<IconButton onClick={() => {
+                                setFormDialogState({
+                                    isOpen: true,
+                                    postId: post._id,
+                                })
+                            }}>
+                                <EditIcon />
+                            </IconButton>)
+                        ) : (
+                            null
+                        )}
                         {currentUser?._id === authorId ? (
                             (<IconButton onClick={() => {
                                 setConfirmDialogState({

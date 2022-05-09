@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../../utils/api';
 import Card from '@mui/material/Card';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -10,7 +11,8 @@ import Typography from '@mui/material/Typography';
 import GlobalContext from '../../contexts/globalContext'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined'
-import DeleteIcon from '@mui/icons-material/Delete'
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
+import EditIcon from '@mui/icons-material/Edit'
 import { IconButton, Input, TextField } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import { Container } from '@mui/material';
@@ -22,16 +24,17 @@ import { List } from '@mui/material';
 
 
 export default function PostPage() {
+    const { writeLS, removeLS } = useLocalStorage();
 
     const [postItem, setPostItem] = useState(null)
     const params = useParams()
-    const { favorites, favoriteCounter, setFavoriteCounter, removeFavorite, currentUser, setFavorites } = useContext(GlobalContext);
+    const { favorites, currentUser, setFavorites, setConfirmDialogState, setFormDialogState, setSnackBarState } = useContext(GlobalContext);
     const navigate = useNavigate()
     const [comments, setComments] = useState(null);
+
     const addFavorite = () => {
         writeLS('favorites', postItem._id)
         setFavorites((prevState) => [...prevState, postItem._id])
-        setFavoriteCounter((prevState) => prevState + 1)
         api.addLike(postItem._id)
             .then(() => {
                 setSnackBarState({
@@ -43,6 +46,22 @@ export default function PostPage() {
                     isOpen: true, msg: 'Не удалось поставить лайк :('
                 })
             });
+    }
+
+    const removeFavorite = () => {
+        removeLS('favorites', postItem._id)
+        setFavorites((prevState) => prevState.filter((postId) => postId !== postItem._id))
+        api.deleteLike(postItem._id)
+            .then(() => {
+                setSnackBarState({
+                    isOpen: true, msg: 'Лайк убран :)'
+                })
+                    .catch(() => {
+                        setSnackBarState({
+                            isOpen: true, msg: 'Не удалось убрать лайк :('
+                        })
+                    })
+            })
     }
 
     useEffect(() => {
@@ -105,35 +124,39 @@ export default function PostPage() {
                         {postItem?.text}
                     </Typography>
                     <CardActions>
-                        Like: {favorites.includes(postItem?._id) ? (
+                        {favorites.includes(postItem?._id) ? (
                             <IconButton aria-label="add to favorites" onClick={removeFavorite} >
                                 <FavoriteIcon color='warning' />
-                                {/* <Typography >
-                                    {favoriteCounter}
-                                </Typography> */}
                             </IconButton>
                         ) : (
                             <IconButton aria-label="add to favorites" onClick={addFavorite}>
                                 <FavoriteBorderOutlinedIcon />
-                                <Typography >
-                                    {favoriteCounter}
-
-                                </Typography>
                             </IconButton>
                         )}
-                        <Typography gutterBottom variant="h3" component="div">
-                            {currentUser?._id === postItem?.author._id ? (
-                                (<IconButton aria-label="delete" onClick={handleClick}>
-                                    <DeleteIcon />
-                                </IconButton>)
-                            ) : (
-                                null
-                            )}
-                        </Typography>
-                        {/* <Typography >
-                    {favoriteCounter}
-                </Typography> */}
-
+                        {currentUser?._id === postItem?.author._id ? (
+                            (<IconButton onClick={() => {
+                                setFormDialogState({
+                                    isOpen: true,
+                                    postId: postItem._id,
+                                })
+                            }}>
+                                <EditIcon />
+                            </IconButton>)
+                        ) : (
+                            null
+                        )}
+                        {currentUser?._id === postItem?.author._id ? (
+                            (<IconButton onClick={() => {
+                                setConfirmDialogState({
+                                    isOpen: true,
+                                    postId: postItem._id,
+                                })
+                            }}>
+                                <DeleteOutlinedIcon />
+                            </IconButton>)
+                        ) : (
+                            null
+                        )}
                     </CardActions>
                     <List sx={{ width: '100%', maxWidth: 500, bgcolor: 'background.paper' }}>
                         {comments?.map((comment) => (
