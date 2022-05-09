@@ -14,6 +14,7 @@ import Footer from './components/Footer'
 import PostPage from './components/PostPage'
 import { Button, createTheme, ThemeProvider } from '@mui/material'
 import { FormDialog } from './components/FormDialog'
+import { ComboBox } from './components/ComboBox'
 
 
 export const App = () => {
@@ -32,9 +33,9 @@ export const App = () => {
   const [currentUser, setCurrentUser] = useState(null)
   const [favorites, setFavorites] = useState(JSON.parse(localStorage.getItem('favorites')) || []);
   const [currentPage, setCurrentPage] = useState(1)
+  const [comboBoxSelected, setComboBoxSelected] = useState('recent')
   const postsPerPage = 12
-  const [comments, setComments] = useState(null);
-
+  const dayjs = require('dayjs')
 
   const [snackBarState, setSnackBarState] = useState({
     isOpen: false,
@@ -51,16 +52,30 @@ export const App = () => {
     postId: null,
   })
 
-  useEffect(() => {
+  // const sortFunc = {
+  //   likes: a.likes.length - b.likes.length
+  // }
 
+  const sortFunc = (post1, post2, comboBoxValue) => {
+    switch (comboBoxValue) {
+      case 'recent':
+        return dayjs(post2['created_at']).unix() - dayjs(post1['created_at']).unix()
+        case 'old':
+          return dayjs(post1['created_at']).unix() - dayjs(post2['created_at']).unix()
+      case 'likes':
+        return post2.likes.length - post1.likes.length
+      case 'comments':
+        return post2.comments.length - post1.comments.length
+    }
+  }
+
+  useEffect(() => {
     api.getPosts()
-      .then((posts) => setPostList(posts))
-      .catch(err => alert(err));
-
-  }, []);
+      .then((posts) => setPostList(posts.sort((post1, post2) => sortFunc(post1, post2, comboBoxSelected))))
+      .catch(err => alert(err))
+  }, [comboBoxSelected]);
 
   useEffect(() => {
-
     api.getCurrentUser()
       .then((user) => setCurrentUser(user))
       .catch(err => alert(err));
@@ -87,7 +102,8 @@ export const App = () => {
         setConfirmDialogState,
         formDialogState,
         setFormDialogState,
-
+        comboBoxSelected,
+        setComboBoxSelected,
       }}>
         <div className='appContainer'>
           <Header>
@@ -99,6 +115,7 @@ export const App = () => {
             }}>
               New post
             </Button>
+            <ComboBox />
             <Info />
           </Header>
           <Routes>

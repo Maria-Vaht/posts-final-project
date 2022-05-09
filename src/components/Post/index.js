@@ -32,18 +32,6 @@ export const Post = ({ post }) => {
     const dayjs = require('dayjs')
     const dateParsedCreatedAt = dayjs(post['created_at']).format('DD-MM-YYYY HH:mm:ss')
 
-    // const writeLS = (key, value) => {
-    //     const storage = JSON.parse(localStorage.getItem(key)) || []
-    //     storage.push(value)
-    //     localStorage.setItem(key, JSON.stringify(storage))
-    // }
-
-    // const removeLS = (key, value) => {
-    //     const storage = JSON.parse(localStorage.getItem(key))
-    //     const filteredStorage = storage.filter((item) => item !== value)
-    //     localStorage.setItem(key, JSON.stringify(filteredStorage))
-    // }
-
     const addFavorite = () => {
         writeLS('favorites', post._id)
         setFavorites((prevState) => [...prevState, post._id])
