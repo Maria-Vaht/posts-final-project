@@ -28,7 +28,7 @@ class Api {
     }
 
     createPost(title, text, image, tags) {
-        const tagList = tags.trim().split(/[,]\s*|\s+/g)
+        const tagList = tags.trim().split(/,\s*|\s+/g)
         return fetch(`${this._url}/posts`, {
             method: 'POST',
             headers: {

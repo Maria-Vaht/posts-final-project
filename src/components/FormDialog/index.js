@@ -21,6 +21,11 @@ export const FormDialog = () => {
                     setTags(post?.tags.join(', '))
                 })
                 .catch(err => alert(err))
+        } else {
+            setTitle('')
+            setText('')
+            setImage('')
+            setTags('')
         }
     }, [postId]);
 

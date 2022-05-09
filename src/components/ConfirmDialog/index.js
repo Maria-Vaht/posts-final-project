@@ -15,33 +15,35 @@ export const ConfirmDialog = () => {
       return {
         isOpen: false,
         postId: null,
-      };
-    });
-    navigate('/')
+      }
+    })
   }
 
-  const deletePost = () => {
-    api.deletePostById(postId)
-      .then(() => setPostList(prevState => prevState.filter((post) => post._id !== postId)))
-      .catch(err => alert(err))
-      .finally(() => handleClose())
-  }
+const deletePost = () => {
+  api.deletePostById(postId)
+    .then(() => setPostList(prevState => prevState.filter((post) => post._id !== postId)))
+    .catch(err => alert(err))
+    .finally(() => {
+      handleClose()
+      navigate('/')
+    })
+}
 
-  return (
-    <div>
-      <Dialog open={isOpen} onClose={handleClose}>
-        <DialogContent>
-          <DialogContentText>
-            Вы действительно хотите удалить пост? :(
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Нет</Button>
-          <Button onClick={deletePost} >
-            Да
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  )
+return (
+  <div>
+    <Dialog open={isOpen} onClose={handleClose}>
+      <DialogContent>
+        <DialogContentText>
+          Вы действительно хотите удалить пост? :(
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Нет</Button>
+        <Button onClick={deletePost} >
+          Да
+        </Button>
+      </DialogActions>
+    </Dialog>
+  </div>
+)
 }
