@@ -67,23 +67,19 @@ export default function PostPage() {
     }
 
 
-    const handleSubmit = (event) => {
-        const navigate = useNavigate();
+    const handleComment = (event) => {
         event.preventDefault();
         const {
-            target: { comment },
+            target: {comment},
         } = event;
-        // name.value === event.target.name.value
-        api.addComment(postItem._id, {
-            comment: comment.value, // name(ключ объекта) : name.value(обращение к value input из узла дома event target)
-        })
-            .then((data) => {
-                navigate('/');
-            })
-            .catch((err) => alert(err));
+       
+       api.addComment(postItem._id, {text: comment.value}).
+       then(() => api.getComments(params.postID)).
+       then((data) => setComments(data));
+       event.target.comment.value = '';
+     
     };
-
-    return (
+ return (
         <Container>
             <div>
                 <Button className='buttonMUI' variant="contained" style={{ marginTop: '10px', marginLeft: "30%", background: 'white' }} onClick={() => navigate('/')} >Назад</Button>
@@ -95,7 +91,6 @@ export default function PostPage() {
 
                     image={postItem?.image}
                 />
-
                 <CardContent>
                     <Avatar alt="author" src={postItem?.author !== null && postItem?.author.avatar !== null ? postItem?.author.avatar : ''} />
                     <Typography color="text.secondary">{dayjs(postItem?.created_at).format('MMMM D, YYYY')}</Typography>
@@ -147,7 +142,7 @@ export default function PostPage() {
                             />))}
                     </List>
                     <div>
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleComment}>
                             <TextField fullWidth label='Add a comment' name='comment' variant='outlined' />
                             <Button type='submit'>Отправить</Button>
                         </form>

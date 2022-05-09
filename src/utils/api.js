@@ -93,18 +93,20 @@ class Api {
                 authorization: `Bearer ${this._token}`,
                 }
         }).then(onResponse)
+}
 
-    }
-    addComment(id, comment) {
-        return fetch(`${this._url}/posts/comments/${id}`, {
-            method: 'POST',
-            headers: {
-                authorization: `Bearer ${this._token}`,
-                'Content-Type': 'application/json',
-                },
-            body: JSON.stringify(comment),
-        }).then(onResponse)
-    }
+addComment(id, comment){
+    return fetch(`${this._url}/posts/comments/${id}`, {
+        method: 'POST',
+        headers: {
+            authorization: `Bearer ${this._token}`,
+            'Content-Type': 'application/json',
+            },
+        body: JSON.stringify(comment),
+    }).then(res => res.json())
+    .catch(err => alert(err.message));
+}
+
 }
 
 
