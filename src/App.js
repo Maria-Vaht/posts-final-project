@@ -5,8 +5,6 @@ import GlobalContext from './contexts/globalContext'
 import api from './utils/api.js'
 import './index.css'
 import { Pagination } from './components/Pagination'
-import { CreatePostDialog } from './components/CreatePostDialog'
-import { EditPostDialog } from './components/EditPostDialog'
 import { Snackbar } from './components/Snackbar'
 import { ConfirmDialog } from './components/ConfirmDialog'
 import { Header } from './components/Header'
@@ -15,6 +13,7 @@ import { Info } from './components/Info'
 import Footer from './components/Footer'
 import PostPage from './components/PostPage'
 import { Button, createTheme, ThemeProvider } from '@mui/material'
+import { FormDialog } from './components/FormDialog'
 
 
 export const App = () => {
@@ -42,21 +41,15 @@ export const App = () => {
     msg: null,
   });
 
-  const [createPostDialogState, setCreatePostDialogState] = useState({
+  const [formDialogState, setFormDialogState] = useState({
     isOpen: false,
+    postId: null,
   })
-
-  const [editPostDialogState, setEditPostDialogState] = useState({
-    isOpen: false,
-  })
-
 
   const [confirmDialogState, setConfirmDialogState] = useState({
     isOpen: false,
     postId: null,
   })
-
-
 
   useEffect(() => {
 
@@ -92,17 +85,16 @@ export const App = () => {
         setSnackBarState,
         confirmDialogState,
         setConfirmDialogState,
-        createPostDialogState,
-        setCreatePostDialogState,
-        editPostDialogState,
-        setEditPostDialogState,
+        formDialogState,
+        setFormDialogState,
 
       }}>
         <div className='appContainer'>
           <Header>
             <Button className='buttonMUI' variant='contained' color='secondary' onClick={() => {
-              setCreatePostDialogState({
+              setFormDialogState({
                 isOpen: true,
+                postId: null,
               })
             }}>
               New post
@@ -118,12 +110,8 @@ export const App = () => {
               }
             />
             <Route path="post/:postID" element={<PostPage />} />
-            <Route path='post/:PostId/edit' element={<EditPostDialog />} />
-            {/* <Route path="/profile" element={<Profile />} />
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} /> */}
           </Routes>
-          <CreatePostDialog />
+          <FormDialog />
           <ConfirmDialog />
           <Snackbar />
           <Footer />

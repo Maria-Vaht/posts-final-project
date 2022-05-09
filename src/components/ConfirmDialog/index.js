@@ -2,13 +2,13 @@ import React, { useContext } from 'react'
 import GlobalContext from '../../contexts/globalContext'
 import api from '../../utils/api'
 import { Dialog, Button, DialogActions, DialogContent, DialogContentText } from '@mui/material'
-// import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export const ConfirmDialog = () => {
   const { confirmDialogState: { isOpen, postId }, setConfirmDialogState, setPostList } = useContext(GlobalContext)
 
   // const params = useParams()
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const handleClose = () => {
     setConfirmDialogState(() => {
@@ -17,7 +17,7 @@ export const ConfirmDialog = () => {
         postId: null,
       };
     });
-    // navigate('/')
+    navigate('/')
   }
 
   const deletePost = () => {
