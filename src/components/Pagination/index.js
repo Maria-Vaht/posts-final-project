@@ -4,11 +4,12 @@ import GlobalContext from '../../contexts/globalContext'
 import { styled, Button, Typography } from '@mui/material'
 import style from './style.module.css'
 
-export const Pagination = ({ postList }) => {
-    const { isTabLiked, postsPerPage, setCurrentPage } = useContext(GlobalContext)
+export const Pagination = () => {
+    const { isTabLiked, postList, postListLiked, postsPerPage, setCurrentPage } = useContext(GlobalContext)
+    const list = isTabLiked ? postListLiked : postList
 
     const { items } = usePagination({
-        count: Math.ceil(postList?.length / postsPerPage),
+        count: Math.ceil(list?.length / postsPerPage),
         hidePrevButton: true,
         hideNextButton: true,
     });

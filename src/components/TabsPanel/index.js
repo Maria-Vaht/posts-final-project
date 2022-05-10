@@ -6,7 +6,7 @@ import style from './style.module.css'
 import GlobalContext from '../../contexts/globalContext'
 
 export const TabsPanel = () => {
-    const { currentPostsAll, currentPostsLiked, setIsTabLiked } = useContext(GlobalContext)
+    const { setIsTabLiked } = useContext(GlobalContext)
 
     const [value, setValue] = React.useState(0);
 
@@ -27,7 +27,7 @@ export const TabsPanel = () => {
             >
                 {value === index && (
                     <Box sx={{ p: 3 }}>
-                        <Typography>{children}</Typography>
+                        <Typography component={'span'}>{children}</Typography>
                     </Box>
                 )}
             </div>
@@ -41,19 +41,11 @@ export const TabsPanel = () => {
     };
 
     return (
-        <>
-            <div className={style.tabsPanel}>
-                <Tabs value={value} onChange={handleChange}>
-                    <Tab onClick={() => setIsTabLiked(false)} label="All posts" />
-                    <Tab onClick={() => setIsTabLiked(true)} label="You liked" />
-                </Tabs>
-            </div >
-            <TabPanel value={value} index={0}>
-                <PostList postList={currentPostsAll} />
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-                <PostList postList={currentPostsLiked} />
-            </TabPanel>
-        </>
+        <div className={style.tabsPanel}>
+            <Tabs value={value} onChange={handleChange}>
+                <Tab onClick={() => setIsTabLiked(false)} label="All posts" />
+                <Tab onClick={() => setIsTabLiked(true)} label="You liked" />
+            </Tabs>
+        </div >
     );
 }

@@ -7,7 +7,6 @@ import { Card, CardContent, CardMedia, CardActions, Typography, IconButton, Card
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
-import CommentIcon from '@mui/icons-material/Comment';
 import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import EditIcon from '@mui/icons-material/Edit'
 import { Link } from 'react-router-dom'
@@ -39,12 +38,12 @@ export const Post = ({ post }) => {
         api.addLike(post._id)
             .then(() => {
                 setSnackBarState({
-                    isOpen: true, msg: 'Лайк поставлен :)'
+                    isOpen: true, msg: 'Лайк поставлен'
                 })
             })
             .catch(() => {
                 setSnackBarState({
-                    isOpen: true, msg: 'Не удалось поставить лайк :('
+                    isOpen: true, msg: 'Не удалось поставить лайк'
                 })
             });
     }
@@ -56,11 +55,11 @@ export const Post = ({ post }) => {
         api.deleteLike(post._id)
             .then(() => {
                 setSnackBarState({
-                    isOpen: true, msg: 'Лайк убран :)'
+                    isOpen: true, msg: 'Лайк убран'
                 })
                     .catch(() => {
                         setSnackBarState({
-                            isOpen: true, msg: 'Не удалось убрать лайк :('
+                            isOpen: true, msg: 'Не удалось убрать лайк'
                         })
                     })
             })

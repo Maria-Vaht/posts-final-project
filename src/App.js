@@ -4,6 +4,7 @@ import GlobalContext from './contexts/globalContext'
 import api from './utils/api.js'
 import './index.css'
 import { Pagination } from './components/Pagination'
+import { PostList } from './components/PostList'
 import { Snackbar } from './components/Snackbar'
 import { TabsPanel } from './components/TabsPanel'
 import { ConfirmDialog } from './components/ConfirmDialog'
@@ -51,26 +52,16 @@ export const App = () => {
     postId: null,
   })
 
-  // const sortFunc = {
-  //   likes: a.likes.length - b.likes.length
-  // }
-
-  const sortFunc = (post1, post2, comboBoxValue) => {
-    switch (comboBoxValue) {
-      case 'recent':
-        return dayjs(post2['created_at']).unix() - dayjs(post1['created_at']).unix()
-      case 'old':
-        return dayjs(post1['created_at']).unix() - dayjs(post2['created_at']).unix()
-      case 'likes':
-        return post2.likes.length - post1.likes.length
-      case 'comments':
-        return post2.comments.length - post1.comments.length
-    }
+  const sortFunctions = {
+    recent: (post1, post2) => dayjs(post2['created_at']).unix() - dayjs(post1['created_at']).unix(),
+    old: (post1, post2) => dayjs(post1['created_at']).unix() - dayjs(post2['created_at']).unix(),
+    likes: (post1, post2) => post2.likes.length - post1.likes.length,
+    comments: (post1, post2) => post2.comments.length - post1.comments.length,
   }
 
   useEffect(() => {
     api.getPosts()
-      .then((posts) => setPostList(posts.sort((post1, post2) => sortFunc(post1, post2, comboBoxSelected))))
+      .then((posts) => setPostList(posts.sort(sortFunctions[comboBoxSelected])))
       .catch(err => alert(err))
   }, [comboBoxSelected]);
 
@@ -91,6 +82,7 @@ export const App = () => {
       <GlobalContext.Provider value={{
         postList,
         setPostList,
+        isTabLiked,
         setIsTabLiked,
         postListLiked,
         currentPostsAll,
@@ -126,7 +118,8 @@ export const App = () => {
             <Route path="/"
               element={<>
                 <TabsPanel />
-                <Pagination postList={isTabLiked ? postListLiked : postList} />
+                <PostList />
+                <Pagination />
               </>
               }
             />
