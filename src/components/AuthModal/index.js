@@ -22,7 +22,7 @@ const style = {
 };
 
 export const AuthModal = () => {
-    const { setCurrentUser} = useContext(GlobalContext)
+    const { setCurrentUser, setFormDialogState} = useContext(GlobalContext)
     const api = useApi()
     const { authState, setAuthState } = useContext(GlobalContext)
     const [email, setEmail] = useState('');
@@ -57,16 +57,33 @@ const signUp = () => {
             msg: null
         }
     })
-})
-}
+     setEmail('');
+                setPassword('');
+            })
+            .catch((err) => {
+              if(err.includes('409')) {
+                setModalState(() => {
+                  return {
+                    isOpen: true,
+                    msg: 'Пользователь уже существует.',
+                  };
+                });
+              }else{
+                setModalState(() => {
+                  return {
+                    isOpen: true,
+                    msg: 'Поля заполнены неверно.',
+                  };
+                });
+              }
+            });
+    };
+
 
 const signIn = () => {
     api.signIn({ email, password })
-        .then(onSignIn)
-}
-
-const onSignIn = (signedInUser) => {
-    const { token, data } = signedInUser;
+    .then((signedUser) => {
+    const { token, data } = signedUser;
     localStorage.setItem('token', JSON.stringify(token));
     setCurrentUser(data);
     setAuthState (() => {
@@ -74,9 +91,31 @@ const onSignIn = (signedInUser) => {
             isOpen: false,
             msg: null,
         };
-    });
-};
-        return (
+    })
+    setEmail('');
+              setPassword('');
+})
+    .catch((err) => {
+        if(err.includes('401')) {
+            setFormDialogState(() => {
+            return {
+              isOpen: true,
+              msg: 'Неверный логин или пароль.',
+            };
+          });
+        }else{
+          setModalState(() => {
+            return {
+              isOpen: true,
+              msg: 'Поля заполнены неверно.',
+            };
+          });
+        }
+      });
+}
+        
+
+return (
             <Modal open={authState.isOpen} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
                 <Box sx={style}>
                     <Grid container spacing={3}>

@@ -102,9 +102,10 @@ addComment(id, comment){
             'Content-Type': 'application/json',
             },
         body: JSON.stringify(comment),
-    }).then(res => res.json())
-    .catch(err => alert(err.message));
+    }).then(onResponse)
 }
+
+
 signUp(userData){
     return fetch(`${this._url}/signup`,{
         method: "POST",
@@ -112,8 +113,7 @@ signUp(userData){
             "Content-Type": "application/json"
         },
         body: JSON.stringify(userData),
-    }).then(res => res.json())
-    .catch(err => alert(err.message));
+    }).then(onResponse)
    
 }
 signIn(userData){
@@ -123,8 +123,7 @@ signIn(userData){
             "Content-Type": "application/json"
         },
         body: JSON.stringify(userData),
-    }).then(res => res.json())
-    .catch(err => alert(err.message));  
+    }).then(onResponse) 
 }
 
 }
