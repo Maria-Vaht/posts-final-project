@@ -100,6 +100,7 @@ export const App = () => {
         setFormDialogState,
         comboBoxSelected,
         setComboBoxSelected,
+        sortFunctions,
       }}>
         <div className='appContainer'>
           <Header>
