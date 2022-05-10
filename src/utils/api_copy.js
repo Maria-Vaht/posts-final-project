@@ -1,4 +1,3 @@
-import { config } from './config'
 
 const onResponse = (res) => {
     return res.ok ? res.json() : Promise.reject(`Ошибка : ${res.status}`);
@@ -28,7 +27,7 @@ class Api {
     }
 
     createPost(title, text, image, tags) {
-        const tagList = tags.trim().split(/[,]\s*|\s+/g)
+        const tagList = tags.trim().split(/,\s*|\s+/g)
         return fetch(`${this._url}/posts`, {
             method: 'POST',
             headers: {
@@ -106,9 +105,28 @@ addComment(id, comment){
     }).then(res => res.json())
     .catch(err => alert(err.message));
 }
+signUp(userData){
+    return fetch(`${this._url}/signup`,{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(userData),
+    }).then(res => res.json())
+    .catch(err => alert(err.message));
+   
+}
+signIn(userData){
+   return fetch(`${this._url}/signin`,{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(userData),
+    }).then(res => res.json())
+    .catch(err => alert(err.message));  
+}
 
 }
 
-
-
-export default new Api(config)
+export default Api

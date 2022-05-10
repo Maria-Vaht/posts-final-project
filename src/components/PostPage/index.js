@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-import api from '../../utils/api';
 import Card from '@mui/material/Card';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import CardActions from '@mui/material/CardActions';
@@ -20,10 +19,11 @@ import { Navigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { Comment } from '../Comment';
 import { List } from '@mui/material';
-
+import { useApi } from '../../hooks/useApi';
 
 
 export default function PostPage() {
+    const api = useApi()
     const { writeLS, removeLS } = useLocalStorage();
 
     const [postItem, setPostItem] = useState(null)

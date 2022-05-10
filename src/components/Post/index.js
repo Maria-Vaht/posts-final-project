@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react'
-import api from '../../utils/api'
 import GlobalContext from '../../contexts/globalContext'
 import style from './style.module.css'
 import { useLocalStorage } from '../../hooks/useLocalStorage';
@@ -11,8 +10,11 @@ import CommentIcon from '@mui/icons-material/Comment';
 import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import EditIcon from '@mui/icons-material/Edit'
 import { Link } from 'react-router-dom'
+import { useApi } from '../../hooks/useApi';
 
 export const Post = ({ post }) => {
+    const api=useApi()
+
     const { title,
         image,
         text,
@@ -31,18 +33,6 @@ export const Post = ({ post }) => {
 
     const dayjs = require('dayjs')
     const dateParsedCreatedAt = dayjs(post['created_at']).format('DD-MM-YYYY HH:mm:ss')
-
-    // const writeLS = (key, value) => {
-    //     const storage = JSON.parse(localStorage.getItem(key)) || []
-    //     storage.push(value)
-    //     localStorage.setItem(key, JSON.stringify(storage))
-    // }
-
-    // const removeLS = (key, value) => {
-    //     const storage = JSON.parse(localStorage.getItem(key))
-    //     const filteredStorage = storage.filter((item) => item !== value)
-    //     localStorage.setItem(key, JSON.stringify(filteredStorage))
-    // }
 
     const addFavorite = () => {
         writeLS('favorites', post._id)
