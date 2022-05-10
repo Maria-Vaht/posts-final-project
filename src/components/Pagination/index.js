@@ -5,7 +5,7 @@ import { styled, Button, Typography } from '@mui/material'
 import style from './style.module.css'
 
 export const Pagination = ({ postList }) => {
-    const { postsPerPage, setCurrentPage } = useContext(GlobalContext)
+    const { isTabLiked, postsPerPage, setCurrentPage } = useContext(GlobalContext)
 
     const { items } = usePagination({
         count: Math.ceil(postList?.length / postsPerPage),
@@ -53,9 +53,6 @@ export const Pagination = ({ postList }) => {
                         } else {
                             children = (
                                 <button
-                                    style={{
-                                        fontWeight: selected ? 'bold' : 'undefined',
-                                    }}
                                     {...item}>
                                     {type}
                                 </button>

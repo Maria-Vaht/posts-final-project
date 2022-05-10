@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import { PostList } from './components/PostList'
 import GlobalContext from './contexts/globalContext'
 import api from './utils/api.js'
 import './index.css'
@@ -9,17 +8,12 @@ import { Snackbar } from './components/Snackbar'
 import { TabsPanel } from './components/TabsPanel'
 import { ConfirmDialog } from './components/ConfirmDialog'
 import { Header } from './components/Header'
-
 import { Info } from './components/Info'
 import Footer from './components/Footer'
 import PostPage from './components/PostPage'
 import { Button, createTheme, ThemeProvider } from '@mui/material'
 import { FormDialog } from './components/FormDialog'
 import { ComboBox } from './components/ComboBox'
-import PropTypes from 'prop-types';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-
 
 export const App = () => {
   const theme = createTheme({
@@ -38,6 +32,7 @@ export const App = () => {
   const [favorites, setFavorites] = useState(JSON.parse(localStorage.getItem('favorites')) || []);
   const [currentPage, setCurrentPage] = useState(1)
   const [comboBoxSelected, setComboBoxSelected] = useState('recent')
+  const [isTabLiked, setIsTabLiked] = useState(false)
   const postsPerPage = 12
   const dayjs = require('dayjs')
 
@@ -90,13 +85,13 @@ export const App = () => {
   const indexOfFirstPost = indexOfLastPost - postsPerPage
   const currentPostsAll = postList?.slice(indexOfFirstPost, indexOfLastPost)
   const currentPostsLiked = postListLiked?.slice(indexOfFirstPost, indexOfLastPost)
-  console.log(postListLiked, currentPostsLiked)
 
   return (
     <ThemeProvider theme={theme}>
       <GlobalContext.Provider value={{
         postList,
         setPostList,
+        setIsTabLiked,
         postListLiked,
         currentPostsAll,
         currentPostsLiked,
@@ -129,7 +124,11 @@ export const App = () => {
           </Header>
           <Routes>
             <Route path="/"
-              element={<TabsPanel />}
+              element={<>
+                <TabsPanel />
+                <Pagination postList={isTabLiked ? postListLiked : postList} />
+              </>
+              }
             />
             <Route path="post/:postID" element={<PostPage />} />
           </Routes>

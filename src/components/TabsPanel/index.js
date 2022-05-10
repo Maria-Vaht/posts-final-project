@@ -1,23 +1,18 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import { Tabs, Tab, Typography, Box } from '@mui/material';
 import { PostList } from '../PostList';
-import { Pagination } from '../Pagination';
 import style from './style.module.css'
 import GlobalContext from '../../contexts/globalContext'
 
 export const TabsPanel = () => {
-    const { postList, postListLiked, currentPostsAll, currentPostsLiked } = useContext(GlobalContext)
+    const { currentPostsAll, currentPostsLiked, setIsTabLiked } = useContext(GlobalContext)
 
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-
 
     function TabPanel(props) {
         const { children, value, index, ...other } = props;
@@ -49,17 +44,15 @@ export const TabsPanel = () => {
         <>
             <div className={style.tabsPanel}>
                 <Tabs value={value} onChange={handleChange}>
-                    <Tab label="All posts" />
-                    <Tab label="You liked" />
+                    <Tab onClick={() => setIsTabLiked(false)} label="All posts" />
+                    <Tab onClick={() => setIsTabLiked(true)} label="You liked" />
                 </Tabs>
             </div >
             <TabPanel value={value} index={0}>
                 <PostList postList={currentPostsAll} />
-                <Pagination postList={postList} />
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <PostList postList={currentPostsLiked} />
-                <Pagination postList={postListLiked} />
             </TabPanel>
         </>
     );
