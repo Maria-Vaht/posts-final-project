@@ -4,8 +4,8 @@ import GlobalContext from '../../contexts/globalContext'
 import { styled, Button, Typography } from '@mui/material'
 import style from './style.module.css'
 
-export const Pagination = () => {
-    const { postList, postsPerPage, setCurrentPage } = useContext(GlobalContext)
+export const Pagination = ({ postList }) => {
+    const { postsPerPage, setCurrentPage } = useContext(GlobalContext)
 
     const { items } = usePagination({
         count: Math.ceil(postList?.length / postsPerPage),
@@ -41,18 +41,21 @@ export const Pagination = () => {
                             )
                         } else if (type === 'page') {
                             children = (
-                                <button 
-                                    {...item}
+                                <button
                                     style={{
                                         fontWeight: selected ? 'bold' : 'undefined',
                                     }}
+                                    {...item}
                                 >
                                     {page}
                                 </button>
                             );
                         } else {
                             children = (
-                                <button 
+                                <button
+                                    style={{
+                                        fontWeight: selected ? 'bold' : 'undefined',
+                                    }}
                                     {...item}>
                                     {type}
                                 </button>

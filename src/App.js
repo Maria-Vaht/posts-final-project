@@ -6,6 +6,7 @@ import api from './utils/api.js'
 import './index.css'
 import { Pagination } from './components/Pagination'
 import { Snackbar } from './components/Snackbar'
+import { TabsPanel } from './components/TabsPanel'
 import { ConfirmDialog } from './components/ConfirmDialog'
 import { Header } from './components/Header'
 
@@ -15,6 +16,9 @@ import PostPage from './components/PostPage'
 import { Button, createTheme, ThemeProvider } from '@mui/material'
 import { FormDialog } from './components/FormDialog'
 import { ComboBox } from './components/ComboBox'
+import PropTypes from 'prop-types';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 
 
 export const App = () => {
@@ -60,8 +64,8 @@ export const App = () => {
     switch (comboBoxValue) {
       case 'recent':
         return dayjs(post2['created_at']).unix() - dayjs(post1['created_at']).unix()
-        case 'old':
-          return dayjs(post1['created_at']).unix() - dayjs(post2['created_at']).unix()
+      case 'old':
+        return dayjs(post1['created_at']).unix() - dayjs(post2['created_at']).unix()
       case 'likes':
         return post2.likes.length - post1.likes.length
       case 'comments':
@@ -81,16 +85,21 @@ export const App = () => {
       .catch(err => alert(err));
   }, []);
 
+  const postListLiked = postList?.filter((post) => favorites.includes(post._id))
   const indexOfLastPost = currentPage * postsPerPage
   const indexOfFirstPost = indexOfLastPost - postsPerPage
-  const currentPosts = postList?.slice(indexOfFirstPost, indexOfLastPost)
+  const currentPostsAll = postList?.slice(indexOfFirstPost, indexOfLastPost)
+  const currentPostsLiked = postListLiked?.slice(indexOfFirstPost, indexOfLastPost)
+  console.log(postListLiked, currentPostsLiked)
 
   return (
     <ThemeProvider theme={theme}>
       <GlobalContext.Provider value={{
         postList,
         setPostList,
-        currentPosts,
+        postListLiked,
+        currentPostsAll,
+        currentPostsLiked,
         postsPerPage,
         setCurrentPage,
         currentUser,
@@ -120,11 +129,7 @@ export const App = () => {
           </Header>
           <Routes>
             <Route path="/"
-              element={<div className='content__cards'>
-                <PostList />
-                <Pagination />
-              </div>
-              }
+              element={<TabsPanel />}
             />
             <Route path="post/:postID" element={<PostPage />} />
           </Routes>
