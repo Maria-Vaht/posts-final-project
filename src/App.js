@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import GlobalContext from './contexts/globalContext'
 import api from './utils/api.js'
-import './index.css'
+import GlobalContext from './contexts/globalContext'
 import { Pagination } from './components/Pagination'
 import { PostList } from './components/PostList'
 import { Snackbar } from './components/Snackbar'
@@ -12,9 +11,10 @@ import { Header } from './components/Header'
 import { Info } from './components/Info'
 import Footer from './components/Footer'
 import PostPage from './components/PostPage'
-import { Button, createTheme, ThemeProvider } from '@mui/material'
 import { FormDialog } from './components/FormDialog'
 import { ComboBox } from './components/ComboBox'
+import { Button, createTheme, ThemeProvider } from '@mui/material'
+import './index.css'
 
 export const App = () => {
   const theme = createTheme({
