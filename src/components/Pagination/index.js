@@ -4,6 +4,7 @@ import GlobalContext from '../../contexts/globalContext'
 import { styled, Button, Typography } from '@mui/material'
 import style from './style.module.css'
 
+
 export const Pagination = () => {
     const { isTabLiked, postList, postListLiked, postsPerPage, setCurrentPage } = useContext(GlobalContext)
     const list = isTabLiked ? postListLiked : postList

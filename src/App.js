@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import api from './utils/api.js'
-import GlobalContext from './contexts/globalContext'
-import { Pagination } from './components/Pagination'
 import { PostList } from './components/PostList'
+import GlobalContext from './contexts/globalContext'
+import './index.css'
+import { Pagination } from './components/Pagination'
 import { Snackbar } from './components/Snackbar'
 import { TabsPanel } from './components/TabsPanel'
 import { ConfirmDialog } from './components/ConfirmDialog'
@@ -13,8 +13,10 @@ import Footer from './components/Footer'
 import PostPage from './components/PostPage'
 import { FormDialog } from './components/FormDialog'
 import { ComboBox } from './components/ComboBox'
+import { useApi } from './hooks/useApi'
+import { useLocalStorage } from './hooks/useLocalStorage'
+import { AuthModal } from './components/AuthModal'
 import { Button, createTheme, ThemeProvider } from '@mui/material'
-import './index.css'
 
 export const App = () => {
   const theme = createTheme({
@@ -28,9 +30,11 @@ export const App = () => {
     },
   });
 
+  const api = useApi()
+  const { readLS } = useLocalStorage()
   const [postList, setPostList] = useState(null)
   const [currentUser, setCurrentUser] = useState(null)
-  const [favorites, setFavorites] = useState(JSON.parse(localStorage.getItem('favorites')) || []);
+  const [favorites, setFavorites] = useState(readLS('favorites') || []);
   const [currentPage, setCurrentPage] = useState(1)
   const [comboBoxSelected, setComboBoxSelected] = useState('recent')
   const [isTabLiked, setIsTabLiked] = useState(false)
@@ -51,6 +55,15 @@ export const App = () => {
     isOpen: false,
     postId: null,
   })
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    msg: null,
+  });
+
+  const [authState, setAuthState] = useState({
+    isOpen: false,
+    msg: null,
+  });
 
   const sortFunctions = {
     recent: (post1, post2) => dayjs(post2['created_at']).unix() - dayjs(post1['created_at']).unix(),
@@ -59,11 +72,25 @@ export const App = () => {
     comments: (post1, post2) => post2.comments.length - post1.comments.length,
   }
 
+
+  useEffect(() => {
+    const token = readLS('token');
+    if (!token) {
+      setAuthState(() => {
+        return {
+          isOpen: true,
+          msg: "Вы не авторизованы",
+        }
+      })
+    }
+  }, [])
+
+
   useEffect(() => {
     api.getPosts()
       .then((posts) => setPostList(posts.sort(sortFunctions[comboBoxSelected])))
       .catch(err => alert(err))
-  }, [comboBoxSelected]);
+  }, [comboBoxSelected, currentUser]);
 
   useEffect(() => {
     api.getCurrentUser()
@@ -90,6 +117,7 @@ export const App = () => {
         postsPerPage,
         setCurrentPage,
         currentUser,
+        setCurrentUser,
         favorites,
         setFavorites,
         snackBarState,
@@ -100,6 +128,10 @@ export const App = () => {
         setFormDialogState,
         comboBoxSelected,
         setComboBoxSelected,
+        modalState,
+        setModalState,
+        authState,
+        setAuthState,
         sortFunctions,
       }}>
         <div className='appContainer'>
@@ -129,6 +161,7 @@ export const App = () => {
           <FormDialog />
           <ConfirmDialog />
           <Snackbar />
+          <AuthModal />
           <Footer />
         </div>
       </GlobalContext.Provider>

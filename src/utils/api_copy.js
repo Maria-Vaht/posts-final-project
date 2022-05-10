@@ -1,4 +1,3 @@
-import { config } from './config'
 
 const onResponse = (res) => {
     return res.ok ? res.json() : Promise.reject(`Ошибка : ${res.status}`);
@@ -93,20 +92,41 @@ class Api {
                 authorization: `Bearer ${this._token}`,
                 }
         }).then(onResponse)
-
-    }
-    addComment(id, comment) {
-        return fetch(`${this._url}/posts/comments/${id}`, {
-            method: 'POST',
-            headers: {
-                authorization: `Bearer ${this._token}`,
-                'Content-Type': 'application/json',
-                },
-            body: JSON.stringify(comment),
-        }).then(onResponse)
-    }
 }
 
+addComment(id, comment){
+    return fetch(`${this._url}/posts/comments/${id}`, {
+        method: 'POST',
+        headers: {
+            authorization: `Bearer ${this._token}`,
+            'Content-Type': 'application/json',
+            },
+        body: JSON.stringify(comment),
+    }).then(res => res.json())
+    .catch(err => alert(err.message));
+}
+signUp(userData){
+    return fetch(`${this._url}/signup`,{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(userData),
+    }).then(res => res.json())
+    .catch(err => alert(err.message));
+   
+}
+signIn(userData){
+   return fetch(`${this._url}/signin`,{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(userData),
+    }).then(res => res.json())
+    .catch(err => alert(err.message));  
+}
 
+}
 
-export default new Api(config)
+export default Api

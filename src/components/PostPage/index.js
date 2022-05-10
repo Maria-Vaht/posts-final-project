@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-import api from '../../utils/api';
 import Card from '@mui/material/Card';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import CardActions from '@mui/material/CardActions';
@@ -20,10 +19,11 @@ import { Navigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { Comment } from '../Comment';
 import { List } from '@mui/material';
-
+import { useApi } from '../../hooks/useApi';
 
 
 export default function PostPage() {
+    const api = useApi()
     const { writeLS, removeLS } = useLocalStorage();
 
     const [postItem, setPostItem] = useState(null)
@@ -74,23 +74,31 @@ export default function PostPage() {
             .catch((err) => alert(err))
     }, [])
 
-    const handleSubmit = (event) => {
-        const navigate = useNavigate();
+    const handleClick = () => {
+
+        api.deletePostById(postItem._id)
+            .then((data) => {
+                alert('Пост удален')
+                navigate('/')
+            })
+            .catch(err => alert("UPS"))
+
+    }
+
+
+    const handleComment = (event) => {
         event.preventDefault();
         const {
-            target: { comment },
+            target: {comment},
         } = event;
-        // name.value === event.target.name.value
-        api.addComment(postItem._id, {
-            comment: comment.value, // name(ключ объекта) : name.value(обращение к value input из узла дома event target)
-        })
-            .then((data) => {
-                navigate('/');
-            })
-            .catch((err) => alert(err));
+       
+       api.addComment(postItem._id, {text: comment.value}).
+       then(() => api.getComments(params.postID)).
+       then((data) => setComments(data));
+       event.target.comment.value = '';
+     
     };
-
-    return (
+ return (
         <Container>
             <div>
                 <Button className='buttonMUI' variant="contained" style={{ marginTop: '10px', marginLeft: "30%", background: 'white' }} onClick={() => navigate('/')} >Назад</Button>
@@ -102,7 +110,6 @@ export default function PostPage() {
 
                     image={postItem?.image}
                 />
-
                 <CardContent>
                     <Avatar alt="author" src={postItem?.author !== null && postItem?.author.avatar !== null ? postItem?.author.avatar : ''} />
                     <Typography color="text.secondary">{dayjs(postItem?.created_at).format('MMMM D, YYYY')}</Typography>
@@ -158,7 +165,7 @@ export default function PostPage() {
                             />))}
                     </List>
                     <div>
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleComment}>
                             <TextField fullWidth label='Add a comment' name='comment' variant='outlined' />
                             <Button type='submit'>Отправить</Button>
                         </form>

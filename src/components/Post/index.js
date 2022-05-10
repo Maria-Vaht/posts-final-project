@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react'
-import api from '../../utils/api'
 import GlobalContext from '../../contexts/globalContext'
 import style from './style.module.css'
 import { useLocalStorage } from '../../hooks/useLocalStorage';
@@ -10,8 +9,11 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import EditIcon from '@mui/icons-material/Edit'
 import { Link } from 'react-router-dom'
+import { useApi } from '../../hooks/useApi';
 
 export const Post = ({ post }) => {
+    const api=useApi()
+
     const { title,
         image,
         text,
