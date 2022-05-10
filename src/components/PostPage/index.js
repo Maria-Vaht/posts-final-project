@@ -38,12 +38,12 @@ export default function PostPage() {
         api.addLike(postItem._id)
             .then(() => {
                 setSnackBarState({
-                    isOpen: true, msg: 'Лайк поставлен :)'
+                    isOpen: true, msg: 'Лайк поставлен'
                 })
             })
             .catch(() => {
                 setSnackBarState({
-                    isOpen: true, msg: 'Не удалось поставить лайк :('
+                    isOpen: true, msg: 'Не удалось поставить лайк'
                 })
             });
     }
@@ -54,11 +54,11 @@ export default function PostPage() {
         api.deleteLike(postItem._id)
             .then(() => {
                 setSnackBarState({
-                    isOpen: true, msg: 'Лайк убран :)'
+                    isOpen: true, msg: 'Лайк убран'
                 })
                     .catch(() => {
                         setSnackBarState({
-                            isOpen: true, msg: 'Не удалось убрать лайк :('
+                            isOpen: true, msg: 'Не удалось убрать лайк'
                         })
                     })
             })

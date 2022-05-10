@@ -30,21 +30,21 @@ const deletePost = () => {
     })
 }
 
-return (
-  <div>
-    <Dialog open={isOpen} onClose={handleClose}>
-      <DialogContent>
-        <DialogContentText>
-          Вы действительно хотите удалить пост? :(
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>Нет</Button>
-        <Button onClick={deletePost} >
-          Да
-        </Button>
-      </DialogActions>
-    </Dialog>
-  </div>
-)
+  return (
+    <div>
+      <Dialog open={isOpen} onClose={handleClose}>
+        <DialogContent>
+          <DialogContentText>
+            Вы действительно хотите удалить пост?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Нет</Button>
+          <Button onClick={deletePost} >
+            Да
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  )
 }

@@ -5,18 +5,18 @@ import GlobalContext from './contexts/globalContext'
 import './index.css'
 import { Pagination } from './components/Pagination'
 import { Snackbar } from './components/Snackbar'
+import { TabsPanel } from './components/TabsPanel'
 import { ConfirmDialog } from './components/ConfirmDialog'
 import { Header } from './components/Header'
-
 import { Info } from './components/Info'
 import Footer from './components/Footer'
 import PostPage from './components/PostPage'
-import { Button, createTheme, ThemeProvider } from '@mui/material'
 import { FormDialog } from './components/FormDialog'
 import { ComboBox } from './components/ComboBox'
 import { useApi } from './hooks/useApi'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import { AuthModal } from './components/AuthModal'
+import { Button, createTheme, ThemeProvider } from '@mui/material'
 
 export const App = () => {
   const theme = createTheme({
@@ -31,12 +31,13 @@ export const App = () => {
   });
 
   const api = useApi()
-  const {readLS} = useLocalStorage()
+  const { readLS } = useLocalStorage()
   const [postList, setPostList] = useState(null)
   const [currentUser, setCurrentUser] = useState(null)
   const [favorites, setFavorites] = useState(readLS('favorites') || []);
   const [currentPage, setCurrentPage] = useState(1)
   const [comboBoxSelected, setComboBoxSelected] = useState('recent')
+  const [isTabLiked, setIsTabLiked] = useState(false)
   const postsPerPage = 12
   const dayjs = require('dayjs')
 
@@ -64,31 +65,21 @@ export const App = () => {
     msg: null,
   });
 
-  // const sortFunc = {
-  //   likes: a.likes.length - b.likes.length
-  // }
-
-  const sortFunc = (post1, post2, comboBoxValue) => {
-    switch (comboBoxValue) {
-      case 'recent':
-        return dayjs(post2['created_at']).unix() - dayjs(post1['created_at']).unix()
-        case 'old':
-          return dayjs(post1['created_at']).unix() - dayjs(post2['created_at']).unix()
-      case 'likes':
-        return post2.likes.length - post1.likes.length
-      case 'comments':
-        return post2.comments.length - post1.comments.length
-    }
+  const sortFunctions = {
+    recent: (post1, post2) => dayjs(post2['created_at']).unix() - dayjs(post1['created_at']).unix(),
+    old: (post1, post2) => dayjs(post1['created_at']).unix() - dayjs(post2['created_at']).unix(),
+    likes: (post1, post2) => post2.likes.length - post1.likes.length,
+    comments: (post1, post2) => post2.comments.length - post1.comments.length,
   }
 
-  
+
   useEffect(() => {
     const token = readLS('token');
     if (!token) {
       setAuthState(() => {
         return {
-            isOpen: true,
-            msg: "Вы не авторизованы",
+          isOpen: true,
+          msg: "Вы не авторизованы",
         }
       })
     }
@@ -97,7 +88,7 @@ export const App = () => {
 
   useEffect(() => {
     api.getPosts()
-      .then((posts) => setPostList(posts.sort((post1, post2) => sortFunc(post1, post2, comboBoxSelected))))
+      .then((posts) => setPostList(posts.sort(sortFunctions[comboBoxSelected])))
       .catch(err => alert(err))
   }, [comboBoxSelected, currentUser]);
 
@@ -107,16 +98,22 @@ export const App = () => {
       .catch(err => alert(err));
   }, []);
 
+  const postListLiked = postList?.filter((post) => favorites.includes(post._id))
   const indexOfLastPost = currentPage * postsPerPage
   const indexOfFirstPost = indexOfLastPost - postsPerPage
-  const currentPosts = postList?.slice(indexOfFirstPost, indexOfLastPost)
+  const currentPostsAll = postList?.slice(indexOfFirstPost, indexOfLastPost)
+  const currentPostsLiked = postListLiked?.slice(indexOfFirstPost, indexOfLastPost)
 
   return (
     <ThemeProvider theme={theme}>
       <GlobalContext.Provider value={{
         postList,
         setPostList,
-        currentPosts,
+        isTabLiked,
+        setIsTabLiked,
+        postListLiked,
+        currentPostsAll,
+        currentPostsLiked,
         postsPerPage,
         setCurrentPage,
         currentUser,
@@ -133,8 +130,9 @@ export const App = () => {
         setComboBoxSelected,
         modalState,
         setModalState,
-        authState, 
-        setAuthState
+        authState,
+        setAuthState,
+        sortFunctions,
       }}>
         <div className='appContainer'>
           <Header>
@@ -151,10 +149,11 @@ export const App = () => {
           </Header>
           <Routes>
             <Route path="/"
-              element={<div className='content__cards'>
+              element={<>
+                <TabsPanel />
                 <PostList />
                 <Pagination />
-              </div>
+              </>
               }
             />
             <Route path="post/:postID" element={<PostPage />} />
