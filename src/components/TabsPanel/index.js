@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
-import PropTypes from 'prop-types'
-import { Tabs, Tab, Typography, Box } from '@mui/material'
+import PropTypes from 'prop-types';
+import { Tabs, Tab, Typography, Box, Grid } from '@mui/material';
 import style from './style.module.css'
 import GlobalContext from '../../contexts/globalContext'
 
@@ -17,7 +17,7 @@ export const TabsPanel = () => {
         const { children, value, index, ...other } = props;
 
         return (
-            <div
+            <div 
                 role="tabpanel"
                 hidden={value !== index}
                 id={`simple-tabpanel-${index}`}
@@ -40,11 +40,13 @@ export const TabsPanel = () => {
     };
 
     return (
+      
         <div className={style.tabsPanel}>
             <Tabs value={value} onChange={handleChange}>
                 <Tab onClick={() => setIsTabLiked(false)} label="All posts" />
                 <Tab onClick={() => setIsTabLiked(true)} label="You liked" />
             </Tabs>
         </div >
-    );
+            
+    )   
 }
