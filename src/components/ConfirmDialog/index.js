@@ -1,13 +1,12 @@
 import React, { useContext } from 'react'
 import GlobalContext from '../../contexts/globalContext'
-
 import { Dialog, Button, DialogActions, DialogContent, DialogContentText } from '@mui/material'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useApi } from '../../hooks/useApi';
+
 export const ConfirmDialog = () => {
   const { confirmDialogState: { isOpen, postId }, setConfirmDialogState, setPostList } = useContext(GlobalContext)
 
-  // const params = useParams()
   const navigate = useNavigate()
 
   const handleClose = () => {

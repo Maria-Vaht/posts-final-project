@@ -1,18 +1,18 @@
 import React, { useState, useContext } from 'react'
 import GlobalContext from '../../contexts/globalContext'
 import style from './style.module.css'
-import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { useLocalStorage } from '../../hooks/useLocalStorage'
 import { Card, CardContent, CardMedia, CardActions, Typography, IconButton, CardHeader, Avatar } from '@mui/material'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
-import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
+import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined'
 import EditIcon from '@mui/icons-material/Edit'
 import { Link } from 'react-router-dom'
-import { useApi } from '../../hooks/useApi';
+import { useApi } from '../../hooks/useApi'
 
 export const Post = ({ post }) => {
-    const api=useApi()
+    const api = useApi()
 
     const { title,
         image,

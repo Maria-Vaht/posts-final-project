@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
-import PropTypes from 'prop-types';
-import { Tabs, Tab, Typography, Box } from '@mui/material';
-import { PostList } from '../PostList';
+import PropTypes from 'prop-types'
+import { Tabs, Tab, Typography, Box } from '@mui/material'
 import style from './style.module.css'
 import GlobalContext from '../../contexts/globalContext'
 

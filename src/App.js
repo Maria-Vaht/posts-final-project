@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { PostList } from './components/PostList'
 import GlobalContext from './contexts/globalContext'
-import './index.css'
 import { Pagination } from './components/Pagination'
 import { Snackbar } from './components/Snackbar'
 import { TabsPanel } from './components/TabsPanel'
@@ -17,6 +16,7 @@ import { useApi } from './hooks/useApi'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import { AuthModal } from './components/AuthModal'
 import { Button, createTheme, ThemeProvider } from '@mui/material'
+import './index.css'
 
 export const App = () => {
   const theme = createTheme({
@@ -72,7 +72,6 @@ export const App = () => {
     comments: (post1, post2) => post2.comments.length - post1.comments.length,
   }
 
-
   useEffect(() => {
     const token = readLS('token');
     if (!token) {
@@ -84,7 +83,6 @@ export const App = () => {
       })
     }
   }, [])
-
 
   useEffect(() => {
     api.getPosts()
