@@ -4,7 +4,6 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import GlobalContext from '../../contexts/globalContext';
 import { Grid, Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material';
-import { Visibility } from '@mui/icons-material';
 import { useApi } from '../../hooks/useApi';
 
 
@@ -39,7 +38,7 @@ export const AuthModal = () => {
 const signUp = () => {
    api.signUp({email, password}) 
    .then((createdUser) => {
-    //    console.log(createdUser);
+       console.log(createdUser);
     return api.signIn({email, password});
 })
 .then((signedInUser) => {

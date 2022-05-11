@@ -23,8 +23,6 @@ import { useApi } from '../../hooks/useApi';
 
 
 
-
-
 export default function PostPage() {
     
 
@@ -72,25 +70,12 @@ export default function PostPage() {
     useEffect(() => {
         api.getPosts(params.postID)
             .then((data) => setPostItem(data))
-            .catch((err) => alert(err));
+            .catch((err) => console.log('error'));
 
         api.getComments(params.postID)
             .then((data) => setComments(data))
-            .catch((err) => alert(err))
+            .catch((err) => console.log('error'))
     }, [comments])
-
-    // const handleClick = () => {
-
-    //     api.deletePostById(postItem._id)
-    //         .then((data) => {
-    //             alert('Пост удален')
-    //             navigate('/')
-    //         })
-    //         .catch(err => alert("UPS"))
-
-    // }
-
-    
 
     const handleComment = (event) => {
         event.preventDefault();
@@ -104,8 +89,6 @@ export default function PostPage() {
        event.target.comment.value = '';
      
     };
-
-
 
 
  return (
@@ -177,7 +160,7 @@ export default function PostPage() {
                     <div>
                         <form onSubmit={handleComment}>
                             <TextField fullWidth label='Add a comment' name='comment' variant='outlined' />
-                            <Button className='buttonMUI' type='submit' variant='contained' style={{ marginBottom: '20px', marginRight: '15px', marginTop: '15px'}}>Отправить</Button>
+                            <Button className='buttonMUI' type='submit' variant='contained' style={{ marginBottom: '20px', marginRight: '15px', marginTop: '15px'}}>Send</Button>
                            
                         </form>
                     </div>

@@ -5,7 +5,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import GlobalContext from '../../contexts/globalContext';
 import { Button } from '@mui/material';
 import Logo from "../Logo"
-import { ComboBox } from '../ComboBox';
+
+
 
 
 export const Header = () => {
@@ -43,7 +44,6 @@ export const Header = () => {
             <Box component='div'>
                 <Logo />
                 </Box>
-            
                 <Typography>
                 <Button className='buttonMUI' variant='contained' color='secondary' onClick={() => {
               setFormDialogState({
@@ -63,7 +63,7 @@ export const Header = () => {
           }}>
           </Box>
           <Stack direction="row" spacing={2}> 
-                      <Chip avatar={<Avatar alt="Natacha" src = {currentUser?.avatar} />}  label={currentUser?.name} onClick ={navigateToEditPage}  variant="outlined" />
+                      <Chip avatar={<Avatar alt="Avatar" src = {currentUser?.avatar} />}  label={currentUser?.name} onClick ={navigateToEditPage}  variant="outlined" size="medium" /> 
                       <Chip icon={<LogoutIcon />}  label='Logout' onClick={deleteUser}   variant="outlined" />
           </Stack>
         </Toolbar>

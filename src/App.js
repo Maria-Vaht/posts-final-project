@@ -8,7 +8,6 @@ import { Snackbar } from './components/Snackbar'
 import { TabsPanel } from './components/TabsPanel'
 import { ConfirmDialog } from './components/ConfirmDialog'
 import { Header } from './components/Header'
-import { Info } from './components/Info'
 import {Footer} from './components/Footer'
 import PostPage from './components/PostPage'
 import { FormDialog } from './components/FormDialog'
@@ -88,7 +87,7 @@ export const App = () => {
       .catch(() => setModalState(() => {
         return {
           isOpen: true,
-          msg: "Need to LogIn"
+          msg: "Need to login"
         }
       }))
   }, []);
@@ -99,7 +98,7 @@ export const App = () => {
       setAuthModal(() => {
         return {
           isOpen: true,
-          msg: "Вы не авторизованы",
+          msg: "Need authorization",
         }
       })
     }
@@ -116,7 +115,7 @@ export const App = () => {
           msg: "Unexpected error"
         }
       }))
-  }}, [comboBoxSelected, currentUser, comments]);
+  }}, [comboBoxSelected, currentUser]);
 
  
 
@@ -160,7 +159,6 @@ export const App = () => {
         <div className='appContainer'>
           <Header>
             <ComboBox />
-            <Info />
           </Header>
           <Routes>
             <Route path="/"

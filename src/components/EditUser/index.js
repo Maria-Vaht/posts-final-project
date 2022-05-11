@@ -6,8 +6,6 @@ import { useLocalStorage } from '../../hooks/useLocalStorage';
 
 import{Grid, Typography, TextField, Button} from '@mui/material';
 
-
-
 export const EditUser = () => {
     const navigate = useNavigate();
     const {readLS} = useLocalStorage();
@@ -92,7 +90,7 @@ export const EditUser = () => {
               </Grid >
               <Grid item>
                   <Button className='buttonMUI' onClick ={handleClick}  variant="contained" style={{ marginBottom: '20px', marginRight: '15px', marginTop: '15px'}}>
-                      Сохранить
+                      Save
                   </Button>
                   <Button className='buttonMUI' onClick ={handleOut}  variant="outlined" style={{ marginBottom: '20px', marginRight: '15px', marginTop: '15px'}} >
                       Cancel

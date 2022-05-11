@@ -134,8 +134,7 @@ deleteComments(postId, commentId){
             authorization: `Bearer ${this._token}`,
             },
         
-    }).then(res => res.json())
-    .catch(err => alert(err.message));
+    }).onResponse()
 
 }
 
