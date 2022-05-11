@@ -7,25 +7,28 @@ import { Snackbar } from './components/Snackbar'
 import { TabsPanel } from './components/TabsPanel'
 import { ConfirmDialog } from './components/ConfirmDialog'
 import { Header } from './components/Header'
-import { Info } from './components/Info'
-import Footer from './components/Footer'
+import {Footer} from './components/Footer'
 import PostPage from './components/PostPage'
 import { FormDialog } from './components/FormDialog'
 import { ComboBox } from './components/ComboBox'
 import { useApi } from './hooks/useApi'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import { AuthModal } from './components/AuthModal'
-import { Button, createTheme, ThemeProvider } from '@mui/material'
+import { EditUser } from './components/EditUser'
+import { createTheme, ThemeProvider } from '@mui/material'
 import './index.css'
+import Modal from '../src/components/Modal'
+
 
 export const App = () => {
+  
   const theme = createTheme({
     palette: {
       primary: {
-        main: '#9db25c',
+        main: '#d1b9a5',
       },
       secondary: {
-        main: '#eadb5c',
+        main: '#EEEEDD',
       },
     },
   });
@@ -38,8 +41,11 @@ export const App = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [comboBoxSelected, setComboBoxSelected] = useState('recent')
   const [isTabLiked, setIsTabLiked] = useState(false)
+  const [comments, setComments] = useState(null);
   const postsPerPage = 12
   const dayjs = require('dayjs')
+  
+
 
   const [snackBarState, setSnackBarState] = useState({
     isOpen: false,
@@ -60,7 +66,7 @@ export const App = () => {
     msg: null,
   });
 
-  const [authState, setAuthState] = useState({
+  const [authModal, setAuthModal] = useState({
     isOpen: false,
     msg: null,
   });
@@ -73,28 +79,44 @@ export const App = () => {
   }
 
   useEffect(() => {
-    const token = readLS('token');
-    if (!token) {
-      setAuthState(() => {
+    api.getCurrentUser()
+      .then((user) => setCurrentUser(user))
+      .then(api.getPosts().then(posts => {
+        setPostList(posts)
+      }))
+      .catch(() => setModalState(() => {
         return {
           isOpen: true,
-          msg: "Вы не авторизованы",
+          msg: "Need to login"
+        }
+      }))
+  }, []);
+
+  useEffect(() => {
+    const token = readLS('token');
+    if (!token) {
+      setAuthModal(() => {
+        return {
+          isOpen: true,
+          msg: "Need authorization",
         }
       })
     }
   }, [])
 
   useEffect(() => {
+    if(currentUser){
     api.getPosts()
       .then((posts) => setPostList(posts.sort(sortFunctions[comboBoxSelected])))
-      .catch(err => alert(err))
-  }, [comboBoxSelected, currentUser]);
+      .catch(() => setModalState(() => {
+        return {
+          isOpen: true,
+          msg: "Unexpected error"
+        }
+      }))
+  }}, [comboBoxSelected, currentUser]);
 
-  useEffect(() => {
-    api.getCurrentUser()
-      .then((user) => setCurrentUser(user))
-      .catch(err => alert(err));
-  }, []);
+ 
 
   const postListLiked = postList?.filter((post) => favorites.includes(post._id))
   const indexOfLastPost = currentPage * postsPerPage
@@ -128,39 +150,36 @@ export const App = () => {
         setComboBoxSelected,
         modalState,
         setModalState,
-        authState,
-        setAuthState,
+        authModal, 
+        setAuthModal,
         sortFunctions,
+        setComments
       }}>
         <div className='appContainer'>
           <Header>
-            <Button className='buttonMUI' variant='contained' color='secondary' onClick={() => {
-              setFormDialogState({
-                isOpen: true,
-                postId: null,
-              })
-            }}>
-              New post
-            </Button>
             <ComboBox />
-            <Info />
           </Header>
           <Routes>
             <Route path="/"
               element={<>
                 <TabsPanel />
+                 <ComboBox />
+              
                 <PostList />
                 <Pagination />
               </>
               }
             />
             <Route path="post/:postID" element={<PostPage />} />
+            <Route path='currentUser/edit' element={ <EditUser /> } />
           </Routes>
           <FormDialog />
           <ConfirmDialog />
           <Snackbar />
           <AuthModal />
+          <Modal />
           <Footer />
+          
         </div>
       </GlobalContext.Provider>
     </ThemeProvider>

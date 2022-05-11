@@ -80,7 +80,7 @@ export const Post = ({ post }) => {
                     />
                     <CardMedia
                         component="img"
-                        height="140"
+                        height="300"
                         image={image}
                         alt="post"
                     />
@@ -89,19 +89,19 @@ export const Post = ({ post }) => {
                             {dateParsedCreatedAt}
                         </Typography>
                         <div className={style.title}>
-                            <Typography gutterBottom variant="h5" component="div">
+                            <Typography gutterBottom variant="h5" component="div" marginTop='20px'>
                                 <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`post/${post._id}`}>
                                     {title}
                                 </Link>
                             </Typography>
                         </div>
-                        <div className={style.text}>
+                        {/* <div className={style.text}>
                             <Typography variant="body2" color="text.secondary">
                                 <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`post/${post._id}`}>
                                     {text}
                                 </Link>
                             </Typography>
-                        </div>
+                        </div> */}
                         <div className={style.tagListContainer}>
                             {tags.map((tag, i) => <div key={i} className={style.tag}>{tag}</div>)}
                         </div>

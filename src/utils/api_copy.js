@@ -17,6 +17,28 @@ class Api {
         }).then(onResponse)
     }
 
+    editCurrentUser(updateUserInfo) {
+        return fetch(`${this._url}/users/me`, {
+            method : 'PATCH',
+            headers: {
+                authorization: `Bearer ${this._token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updateUserInfo),
+        }).then(onResponse);
+    }
+    
+    editAvatarUser(updateAvatar) {
+        return fetch(`${this._url}/users/me/avatar`, {
+            method: 'PATCH',
+            headers: {
+                authorization: `Bearer ${this._token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updateAvatar),
+        }).then(onResponse);
+    }
+
     getPosts(postId) {
         const requestUrl = postId ? `${this._url}/posts/${postId}` : `${this._url}/posts`;
         return fetch(requestUrl, {
@@ -102,9 +124,20 @@ addComment(id, comment){
             'Content-Type': 'application/json',
             },
         body: JSON.stringify(comment),
-    }).then(res => res.json())
-    .catch(err => alert(err.message));
+    }).then(onResponse)
 }
+
+deleteComments(postId, commentId){
+    return fetch(`${this._url}/posts/comments/${postId}/${commentId}`, {
+        method: 'DELETE',
+        headers: {
+            authorization: `Bearer ${this._token}`,
+            },
+        
+    }).onResponse()
+
+}
+
 signUp(userData){
     return fetch(`${this._url}/signup`,{
         method: "POST",
@@ -112,9 +145,8 @@ signUp(userData){
             "Content-Type": "application/json"
         },
         body: JSON.stringify(userData),
-    }).then(res => res.json())
-    .catch(err => alert(err.message));
-   
+    }).then(onResponse)
+
 }
 signIn(userData){
    return fetch(`${this._url}/signin`,{
@@ -123,8 +155,7 @@ signIn(userData){
             "Content-Type": "application/json"
         },
         body: JSON.stringify(userData),
-    }).then(res => res.json())
-    .catch(err => alert(err.message));  
+    }).then(onResponse) 
 }
 
 }

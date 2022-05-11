@@ -22,7 +22,7 @@ const deletePost = () => {
   const api = useApi()
   api.deletePostById(postId)
     .then(() => setPostList(prevState => prevState.filter((post) => post._id !== postId)))
-    .catch(err => alert(err))
+    .catch(console.log("error"))
     .finally(() => {
       handleClose()
       navigate('/')
