@@ -9,9 +9,10 @@ export const Info = () => {
   const { currentUser } = useContext(GlobalContext);
   return (
     <div className='about'>
-      <Link to ="/">{ <Avatar src= {currentUser?.avatar} /> }
-      </Link> 
-        {currentUser?.name}
+      <Link to ="/currentUser/edit">{ <Avatar src= {currentUser?.avatar} /> } <span />My account
+      
+        <br /> UserName {currentUser?.name}
+        </Link> 
     </div>
   )
 }

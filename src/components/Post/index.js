@@ -6,13 +6,12 @@ import { Card, CardContent, CardMedia, CardActions, Typography, IconButton, Card
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
-import CommentIcon from '@mui/icons-material/Comment';
 import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import EditIcon from '@mui/icons-material/Edit'
 import { Link } from 'react-router-dom'
 import { useApi } from '../../hooks/useApi';
 
-export const Post = ({ post }) => {
+export const Post = ({post}) => {
     const api=useApi()
 
     const { title,
@@ -41,12 +40,12 @@ export const Post = ({ post }) => {
         api.addLike(post._id)
             .then(() => {
                 setSnackBarState({
-                    isOpen: true, msg: 'Лайк поставлен :)'
+                    isOpen: true, msg: 'Лайк поставлен'
                 })
             })
             .catch(() => {
                 setSnackBarState({
-                    isOpen: true, msg: 'Не удалось поставить лайк :('
+                    isOpen: true, msg: 'Не удалось поставить лайк'
                 })
             });
     }
@@ -58,11 +57,11 @@ export const Post = ({ post }) => {
         api.deleteLike(post._id)
             .then(() => {
                 setSnackBarState({
-                    isOpen: true, msg: 'Лайк убран :)'
+                    isOpen: true, msg: 'Лайк убран'
                 })
                     .catch(() => {
                         setSnackBarState({
-                            isOpen: true, msg: 'Не удалось убрать лайк :('
+                            isOpen: true, msg: 'Не удалось убрать лайк'
                         })
                     })
             })
@@ -81,7 +80,7 @@ export const Post = ({ post }) => {
                     />
                     <CardMedia
                         component="img"
-                        height="140"
+                        height="300"
                         image={image}
                         alt="post"
                     />
@@ -90,19 +89,19 @@ export const Post = ({ post }) => {
                             {dateParsedCreatedAt}
                         </Typography>
                         <div className={style.title}>
-                            <Typography gutterBottom variant="h5" component="div">
+                            <Typography gutterBottom variant="h5" component="div" marginTop='20px'>
                                 <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`post/${post._id}`}>
                                     {title}
                                 </Link>
                             </Typography>
                         </div>
-                        <div className={style.text}>
+                        {/* <div className={style.text}>
                             <Typography variant="body2" color="text.secondary">
                                 <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`post/${post._id}`}>
                                     {text}
                                 </Link>
                             </Typography>
-                        </div>
+                        </div> */}
                         <div className={style.tagListContainer}>
                             {tags.map((tag, i) => <div key={i} className={style.tag}>{tag}</div>)}
                         </div>

@@ -1,15 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react'
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField'
+import Autocomplete from '@mui/material/Autocomplete'
 import GlobalContext from '../../contexts/globalContext'
 
-const options = ['recent', 'old', 'likes', 'comments']
-
 export const ComboBox = () => {
-    const [value, setValue] = React.useState(options[0]);
+    const { sortFunctions, comboBoxSelected, setComboBoxSelected } = useContext(GlobalContext)
 
-    const { comboBoxSelected, setComboBoxSelected } = useContext(GlobalContext)
-
+    const options = Object.keys(sortFunctions)
+    const [value, setValue] = React.useState(options[0])
 
     return (
         <div>

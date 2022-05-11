@@ -22,13 +22,18 @@ import { List } from '@mui/material';
 import { useApi } from '../../hooks/useApi';
 
 
+
+
+
 export default function PostPage() {
+    
+
     const api = useApi()
     const { writeLS, removeLS } = useLocalStorage();
 
     const [postItem, setPostItem] = useState(null)
     const params = useParams()
-    const { favorites, currentUser, setFavorites, setConfirmDialogState, setFormDialogState, setSnackBarState } = useContext(GlobalContext);
+    const { favorites, currentUser, setFavorites, setConfirmDialogState, setFormDialogState, setSnackBarState, favoriteCounter } = useContext(GlobalContext);
     const navigate = useNavigate()
     const [comments, setComments] = useState(null);
 
@@ -38,12 +43,12 @@ export default function PostPage() {
         api.addLike(postItem._id)
             .then(() => {
                 setSnackBarState({
-                    isOpen: true, msg: 'Лайк поставлен :)'
+                    isOpen: true, msg: 'Лайк поставлен'
                 })
             })
             .catch(() => {
                 setSnackBarState({
-                    isOpen: true, msg: 'Не удалось поставить лайк :('
+                    isOpen: true, msg: 'Не удалось поставить лайк'
                 })
             });
     }
@@ -54,11 +59,11 @@ export default function PostPage() {
         api.deleteLike(postItem._id)
             .then(() => {
                 setSnackBarState({
-                    isOpen: true, msg: 'Лайк убран :)'
+                    isOpen: true, msg: 'Лайк убран'
                 })
                     .catch(() => {
                         setSnackBarState({
-                            isOpen: true, msg: 'Не удалось убрать лайк :('
+                            isOpen: true, msg: 'Не удалось убрать лайк'
                         })
                     })
             })
@@ -72,19 +77,20 @@ export default function PostPage() {
         api.getComments(params.postID)
             .then((data) => setComments(data))
             .catch((err) => alert(err))
-    }, [])
+    }, [comments])
 
-    const handleClick = () => {
+    // const handleClick = () => {
 
-        api.deletePostById(postItem._id)
-            .then((data) => {
-                alert('Пост удален')
-                navigate('/')
-            })
-            .catch(err => alert("UPS"))
+    //     api.deletePostById(postItem._id)
+    //         .then((data) => {
+    //             alert('Пост удален')
+    //             navigate('/')
+    //         })
+    //         .catch(err => alert("UPS"))
 
-    }
+    // }
 
+    
 
     const handleComment = (event) => {
         event.preventDefault();
@@ -98,10 +104,14 @@ export default function PostPage() {
        event.target.comment.value = '';
      
     };
+
+
+
+
  return (
         <Container>
             <div>
-                <Button className='buttonMUI' variant="contained" style={{ marginTop: '10px', marginLeft: "30%", background: 'white' }} onClick={() => navigate('/')} >Назад</Button>
+                <Button className='buttonMUI' variant="contained" style={{ marginTop: '10px', marginLeft: "30%"}} onClick={() => navigate('/')} > Homepage </Button>
             </div>
             <Card sx={{ maxWidth: 500 }} style={{ marginTop: "20px", marginLeft: "30%", padding: "20px", position: "center", }}>
                 <CardMedia
@@ -167,7 +177,8 @@ export default function PostPage() {
                     <div>
                         <form onSubmit={handleComment}>
                             <TextField fullWidth label='Add a comment' name='comment' variant='outlined' />
-                            <Button type='submit'>Отправить</Button>
+                            <Button className='buttonMUI' type='submit' variant='contained' style={{ marginBottom: '20px', marginRight: '15px', marginTop: '15px'}}>Отправить</Button>
+                           
                         </form>
                     </div>
                 </CardContent>
